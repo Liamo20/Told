@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Told — Gift a Legacy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600;1,700&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300;1,9..40,400&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:    #1C2B1C;
+      --gold:     #C49A55;
+      --cream:    #F6F3EE;
+      --dark:     #1A1A18;
+      --mid:      #4A4845;
+      --lite:     #7A776F;
+      --border:   #DDD8CF;
+      --quote-bg: #2B2925;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    /* ── NAVIGATION ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--cream);
+      border-bottom: 1px solid rgba(0,0,0,0.06);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 60px;
+      height: 64px;
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--dark);
+      text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 14px;
+      color: var(--mid);
+      text-decoration: none;
+      letter-spacing: 0.01em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--dark); }
+    .nav-links a.active { color: var(--dark); font-weight: 500; border-bottom: 1.5px solid var(--dark); padding-bottom: 2px; }
+
+    .btn-enquire {
+      background: var(--green);
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 400;
+      cursor: pointer;
+      letter-spacing: 0.01em;
+      transition: opacity 0.2s;
+    }
+    .btn-enquire:hover { opacity: 0.85; }
+
+    /* ── HERO ── */
+    .gift-hero {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 100px 60px 80px;
+      text-align: center;
+    }
+
+    .hero-eyebrow {
+      font-family: 'La Belle Aurore', cursive;
+      color: var(--gold);
+      font-size: 22px;
+      font-weight: 400;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .gift-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(36px, 5vw, 60px);
+      font-weight: 600;
+      line-height: 1.1;
+      color: var(--dark);
+      letter-spacing: -0.025em;
+      margin-bottom: 28px;
+    }
+
+    .hero-body {
+      font-size: 16px;
+      color: var(--mid);
+      line-height: 1.8;
+      max-width: 560px;
+      margin: 0 auto;
+    }
+
+    /* ── HOW IT WORKS ── */
+    .how-section {
+      padding: 80px 60px;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .how-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .how-label {
+      font-size: 10px;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--lite);
+      margin-bottom: 48px;
+      text-align: center;
+      font-weight: 400;
+    }
+
+    .how-steps {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0;
+    }
+
+    .how-step {
+      padding: 0 48px;
+      border-right: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .how-step:first-child { padding-left: 0; }
+    .how-step:last-child { border-right: none; padding-right: 0; }
+
+    .how-step-num {
+      font-family: 'La Belle Aurore', cursive;
+      font-size: 36px;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 16px;
+      line-height: 1;
+    }
+
+    .how-step h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 500;
+      color: var(--dark);
+      margin-bottom: 12px;
+      letter-spacing: -0.01em;
+    }
+
+    .how-step p {
+      font-size: 14px;
+      color: var(--mid);
+      line-height: 1.75;
+    }
+
+    /* ── GIFT CARDS ── */
+    .gift-cards-section {
+      padding: 100px 60px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .gift-cards-header {
+      text-align: center;
+      margin-bottom: 56px;
+    }
+
+    .gift-cards-header h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 3vw, 40px);
+      font-weight: 600;
+      color: var(--dark);
+      letter-spacing: -0.02em;
+      margin-bottom: 12px;
+    }
+
+    .gift-cards-header p {
+      color: var(--mid);
+      font-size: 15px;
+      max-width: 400px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    .gift-cards {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border: 1px solid var(--border);
+    }
+
+    .gift-card {
+      padding: 48px;
+      position: relative;
+    }
+
+    .gift-card:first-child {
+      border-right: 1px solid var(--border);
+    }
+
+    .card-label {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--lite);
+      margin-bottom: 16px;
+      font-weight: 400;
+    }
+
+    .card-title-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+
+    .card-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 500;
+      color: var(--dark);
+      letter-spacing: -0.01em;
+    }
+
+    .card-price {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px;
+      font-weight: 400;
+      color: var(--dark);
+    }
+
+    .card-features {
+      list-style: none;
+      margin: 28px 0 40px;
+    }
+
+    .card-features li {
+      font-size: 14px;
+      color: var(--mid);
+      padding: 9px 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-features li:first-child {
+      border-top: 1px solid var(--border);
+    }
+
+    .check {
+      color: var(--gold);
+      font-size: 13px;
+      margin-top: 2px;
+      flex-shrink: 0;
+    }
+
+    .btn-dark {
+      width: 100%;
+      background: var(--green);
+      color: #fff;
+      border: none;
+      padding: 16px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      transition: opacity 0.2s;
+    }
+    .btn-dark:hover { opacity: 0.8; }
+
+    /* Waitlist card specifics */
+    .bespoke-desc {
+      font-size: 14px;
+      color: var(--mid);
+      line-height: 1.75;
+      margin-bottom: 32px;
+    }
+
+    .ribbon-wrap {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 90px;
+      height: 90px;
+      overflow: hidden;
+    }
+    .ribbon-wrap span {
+      position: absolute;
+      top: 22px;
+      right: -22px;
+      background: var(--gold);
+      color: #fff;
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 5px 32px;
+      transform: rotate(45deg);
+      transform-origin: center;
+      font-weight: 500;
+    }
+
+    .waitlist-form {
+      display: flex;
+      gap: 0;
+      margin-top: 0;
+    }
+
+    .waitlist-input {
+      flex: 1;
+      border: 1.5px solid var(--border);
+      border-right: none;
+      padding: 14px 18px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--dark);
+      background: var(--cream);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .waitlist-input::placeholder { color: var(--lite); }
+    .waitlist-input:focus { border-color: var(--mid); }
+
+    .btn-waitlist {
+      background: var(--dark);
+      color: #fff;
+      border: 1.5px solid var(--dark);
+      padding: 14px 22px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      cursor: pointer;
+      white-space: nowrap;
+      letter-spacing: 0.02em;
+      transition: opacity 0.2s;
+    }
+    .btn-waitlist:hover { opacity: 0.8; }
+
+    .waitlist-note {
+      font-size: 12px;
+      color: var(--lite);
+      margin-top: 12px;
+    }
+
+    /* ── PERSONAL NOTE ── */
+    .personal-note-section {
+      background: var(--quote-bg);
+      padding: 100px 60px;
+      text-align: center;
+    }
+
+    .personal-note-section blockquote {
+      font-family: 'Playfair Display', serif;
+      font-style: italic;
+      font-size: clamp(20px, 2.8vw, 34px);
+      color: #E8E4DC;
+      line-height: 1.5;
+      max-width: 720px;
+      margin: 0 auto 32px;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+
+    .personal-note-body {
+      font-size: 15px;
+      color: rgba(255,255,255,0.55);
+      max-width: 540px;
+      margin: 0 auto;
+      line-height: 1.8;
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: var(--green);
+      padding: 100px 60px;
+      text-align: center;
+    }
+
+    .cta-eyebrow {
+      font-family: 'La Belle Aurore', cursive;
+      color: var(--gold);
+      font-size: 20px;
+      margin-bottom: 20px;
+      display: block;
+    }
+
+    .cta-section h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(30px, 4vw, 50px);
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: -0.02em;
+      margin-bottom: 36px;
+      line-height: 1.15;
+    }
+
+    .btn-cta {
+      display: inline-block;
+      background: transparent;
+      color: #fff;
+      border: 1.5px solid rgba(255,255,255,0.6);
+      padding: 15px 40px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      cursor: pointer;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      transition: background 0.2s, border-color 0.2s;
+    }
+    .btn-cta:hover { background: rgba(255,255,255,0.08); border-color: #fff; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--quote-bg);
+      color: rgba(255,255,255,0.55);
+      padding: 72px 60px 40px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 60px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 32px;
+    }
+
+    .footer-brand-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: #fff;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .footer-brand-desc {
+      font-size: 13px;
+      line-height: 1.7;
+      max-width: 280px;
+      margin-bottom: 24px;
+    }
+
+    .footer-office {
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .footer-office-val { font-size: 13px; }
+
+    .footer-col h4 {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-col a {
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: #fff; }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      nav { padding: 0 32px; }
+      .gift-hero { padding: 80px 32px 60px; }
+      .how-section { padding: 72px 32px; }
+      .how-step { padding: 0 32px; }
+      .gift-cards-section { padding: 80px 32px; }
+      .personal-note-section { padding: 80px 32px; }
+      .cta-section { padding: 80px 32px; }
+      footer { padding: 60px 32px 36px; }
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: 0 24px; height: 56px; }
+      .nav-links { gap: 20px; }
+      .nav-links li:not(:last-child) { display: none; }
+
+      .gift-hero { padding: 60px 24px 48px; }
+
+      .how-section { padding: 64px 24px; }
+      .how-steps { grid-template-columns: 1fr; gap: 48px; }
+      .how-step { border-right: none; border-bottom: 1px solid var(--border); padding: 0 0 48px 0; }
+      .how-step:last-child { border-bottom: none; padding-bottom: 0; }
+
+      .gift-cards-section { padding: 72px 24px; }
+      .gift-cards { grid-template-columns: 1fr; }
+      .gift-card:first-child { border-right: none; border-bottom: 1px solid var(--border); }
+      .ribbon-wrap { display: none; }
+
+      .personal-note-section { padding: 72px 24px; }
+      .cta-section { padding: 72px 24px; }
+
+      footer { padding: 56px 24px 32px; }
+      .footer-inner { grid-template-columns: 1fr; gap: 40px; }
+    }
+
+    @media (max-width: 480px) {
+      .gift-hero h1 { font-size: 34px; }
+      .gift-card { padding: 36px 24px; }
+      .waitlist-form { flex-direction: column; }
+      .waitlist-input { border-right: 1.5px solid var(--border); border-bottom: none; }
+      .btn-waitlist { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION -->
+  <nav>
+    <a href="index.html" class="nav-logo">Told</a>
+    <ul class="nav-links">
+      <li><a href="index.html#process">Process</a></li>
+      <li><a href="manifesto.html">Manifesto</a></li>
+      <li><a href="index.html#pricing">Pricing</a></li>
+      <li><a href="gift.html" class="active">Gift</a></li>
+      <li><button class="btn-enquire" onclick="window.location.href='form.html'">Enquire</button></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="gift-hero">
+    <span class="hero-eyebrow">The gift that lasts</span>
+    <h1>Give them the gift of<br>being truly heard.</h1>
+    <p class="hero-body">Not another object. A story — professionally captured, beautifully bound, and kept forever.</p>
+  </section>
+
+  <!-- HOW GIFTING WORKS -->
+  <section class="how-section">
+    <div class="how-inner">
+      <p class="how-label">How gifting works</p>
+      <div class="how-steps">
+
+        <div class="how-step">
+          <span class="how-step-num">1</span>
+          <h3>You choose the tier</h3>
+          <p>Select the experience that fits — a remote digital heirloom, or our full in-home bespoke commission.</p>
+        </div>
+
+        <div class="how-step">
+          <span class="how-step-num">2</span>
+          <h3>We send a beautiful gift card</h3>
+          <p>A considered, physical card arrives at your door — or we send a digital version to gift immediately.</p>
+        </div>
+
+        <div class="how-step">
+          <span class="how-step-num">3</span>
+          <h3>They book at their own pace</h3>
+          <p>The recipient redeems on their own timeline, with no pressure and no expiry on what matters most.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- GIFT OPTION CARDS -->
+  <section class="gift-cards-section">
+    <div class="gift-cards-header">
+      <h2>Choose their story</h2>
+      <p>Two tiers. Both built around the same belief — that a voice deserves to be preserved.</p>
+    </div>
+    <div class="gift-cards">
+
+      <!-- The Remote -->
+      <div class="gift-card">
+        <p class="card-label">Available Now</p>
+        <div class="card-title-row">
+          <span class="card-name">The Remote</span>
+          <span class="card-price">€249</span>
+        </div>
+        <ul class="card-features">
+          <li><span class="check">✓</span> 90-minute professional interview via video</li>
+          <li><span class="check">✓</span> Editorial transcription &amp; narrative shaping</li>
+          <li><span class="check">✓</span> Curated digital heirloom delivered as a beautiful PDF</li>
+          <li><span class="check">✓</span> Gift card dispatched within 48 hours</li>
+        </ul>
+        <button class="btn-dark" onclick="window.location.href='form.html'">Gift This</button>
+      </div>
+
+      <!-- The Bespoke -->
+      <div class="gift-card" id="waitlist">
+        <div class="ribbon-wrap">
+          <span>Premium</span>
+        </div>
+        <p class="card-label">The In-Home Experience</p>
+        <div class="card-title-row">
+          <span class="card-name">The Bespoke</span>
+          <span style="color:var(--lite); font-size:22px;">—</span>
+        </div>
+        <p class="bespoke-desc">A writer visits their home for an afternoon of unhurried storytelling. Includes professional portraiture, a full audio archive, and a hand-bound linen hardcover volume — typeset and delivered as a permanent heirloom.</p>
+        <div class="waitlist-form">
+          <input
+            class="waitlist-input"
+            type="email"
+            placeholder="Your email address"
+            aria-label="Email address for waitlist"
+          >
+          <button
+            class="btn-waitlist"
+            onclick="this.previousElementSibling.value && (window.location.href='mailto:hello@toldmemoirs.com?subject=Bespoke Waitlist&body=Please add me to the waitlist: ' + this.previousElementSibling.value)"
+          >Join the Waitlist</button>
+        </div>
+        <p class="waitlist-note">Limited availability. We'll be in touch when a place opens near you.</p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- PERSONAL NOTE -->
+  <section class="personal-note-section">
+    <blockquote>
+      "The best gifts aren't things.<br>They're moments made permanent."
+    </blockquote>
+    <p class="personal-note-body">When the person you love holds their own story in their hands — reads the words they thought had no weight, sees their life shaped into something considered and kept — something shifts. This is that feeling. That is what you are giving them.</p>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <span class="cta-eyebrow">For those who deserve to be remembered</span>
+    <h2>Ready to give something<br>that lasts?</h2>
+    <a class="btn-cta" href="form.html">Gift a Legacy</a>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-logo">Told</div>
+        <p class="footer-brand-desc">We preserve family legacies through the lens of professional storytelling and boutique editorial craft.</p>
+        <p class="footer-office">Office</p>
+        <p class="footer-office-val">Dublin, Ireland</p>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <ul><li><a href="#">Instagram</a></li></ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="form.html">Members</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="terms.html">Terms</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 Told. Handcrafted in Dublin.</div>
+  </footer>
+
+</body>
+</html>

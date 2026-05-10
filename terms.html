@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Told — Terms & Conditions</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:    #1C2B1C;
+      --gold:     #C49A55;
+      --cream:    #F6F3EE;
+      --dark:     #1A1A18;
+      --mid:      #4A4845;
+      --lite:     #7A776F;
+      --border:   #DDD8CF;
+      --quote-bg: #2B2925;
+      --warm:     #EDE9E1;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 72px;
+      background: var(--cream);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--green);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--mid);
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--green); }
+
+    .btn-enquire {
+      background: var(--green);
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 4px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: opacity 0.2s;
+    }
+
+    .btn-enquire:hover { opacity: 0.85; }
+
+    /* ── HERO ── */
+    .page-hero {
+      background: var(--green);
+      color: #fff;
+      text-align: center;
+      padding: 80px 24px 72px;
+    }
+
+    .page-hero .eyebrow {
+      font-family: 'La Belle Aurore', cursive;
+      font-size: 1.4rem;
+      color: var(--gold);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .page-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 500;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .page-hero .updated {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── CONTENT ── */
+    .legal-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 72px 24px 100px;
+    }
+
+    .legal-wrap h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--green);
+      margin: 48px 0 12px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .legal-wrap h2:first-child { margin-top: 0; border-top: none; }
+
+    .legal-wrap p {
+      font-size: 0.975rem;
+      color: var(--mid);
+      margin-bottom: 16px;
+    }
+
+    .legal-wrap ul {
+      list-style: disc;
+      padding-left: 24px;
+      margin-bottom: 16px;
+    }
+
+    .legal-wrap ul li {
+      font-size: 0.975rem;
+      color: var(--mid);
+      margin-bottom: 8px;
+    }
+
+    .legal-wrap a {
+      color: var(--green);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .legal-wrap a:hover { color: var(--gold); }
+
+    .highlight-box {
+      background: var(--warm);
+      border-left: 3px solid var(--gold);
+      padding: 20px 24px;
+      margin: 24px 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .highlight-box p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--mid);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--quote-bg);
+      color: rgba(255,255,255,0.55);
+      padding: 72px 60px 40px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 60px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 32px;
+    }
+
+    .footer-brand-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: #fff;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .footer-brand-desc {
+      font-size: 13px;
+      line-height: 1.7;
+      max-width: 280px;
+      margin-bottom: 24px;
+    }
+
+    .footer-office {
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .footer-office-val { font-size: 13px; }
+
+    .footer-col h4 {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-col a {
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: #fff; }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      footer { padding: 56px 24px 32px; }
+      .footer-inner { grid-template-columns: 1fr; gap: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">Told</a>
+    <ul class="nav-links">
+      <li><a href="manifesto.html">Our Story</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+    <button class="btn-enquire" onclick="window.location.href='form.html'">Enquire</button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="page-hero">
+    <span class="eyebrow">the fine print</span>
+    <h1>Terms &amp; Conditions</h1>
+    <p class="updated">Last updated: May 2025</p>
+  </section>
+
+  <!-- CONTENT -->
+  <div class="legal-wrap">
+
+    <div class="highlight-box">
+      <p>These terms govern your use of Told's services. By booking a session or purchasing a package, you agree to these terms. Please read them carefully — if you have any questions, email us at <a href="mailto:hello@told.ie">hello@told.ie</a> before proceeding.</p>
+    </div>
+
+    <h2>1. About Told</h2>
+    <p>Told is a memoir and life-story service operated by Told Studio, a sole trader registered in Dublin, Ireland. We interview subjects and craft their stories into lasting, beautifully presented memoirs for families.</p>
+
+    <h2>2. Services</h2>
+    <p>We currently offer the following packages:</p>
+    <ul>
+      <li><strong>The Remote</strong> — a 60–90 minute online recorded interview session, professionally edited and delivered as a written memoir (€249).</li>
+      <li><strong>The Bespoke</strong> — a fully tailored, in-person experience. Pricing and terms are agreed individually. Contact us to join the waitlist.</li>
+    </ul>
+    <p>All services are subject to availability. Booking is confirmed only upon receipt of full payment and a confirmation email from Told.</p>
+
+    <h2>3. Booking &amp; Payment</h2>
+    <p>Payment for The Remote package is collected in full at the time of booking via our secure payment form, powered by Stripe. All prices are in Euro (€) and include VAT where applicable.</p>
+    <p>We accept Visa, Mastercard, and American Express. We do not store your card details — all payment data is processed and held by Stripe in accordance with PCI-DSS standards.</p>
+
+    <h2>4. Cancellations &amp; Refunds</h2>
+    <p>We understand that life happens. Our cancellation policy is as follows:</p>
+    <ul>
+      <li><strong>More than 72 hours before your session:</strong> Full refund, no questions asked.</li>
+      <li><strong>24–72 hours before your session:</strong> 50% refund, or full credit to reschedule.</li>
+      <li><strong>Less than 24 hours before your session:</strong> No refund, but we will offer one complimentary reschedule at our discretion.</li>
+      <li><strong>No-show (no contact):</strong> No refund or reschedule credit.</li>
+    </ul>
+    <p>To cancel or reschedule, email <a href="mailto:hello@told.ie">hello@told.ie</a> with your booking details.</p>
+
+    <h2>5. Rescheduling</h2>
+    <p>You may reschedule your session once, free of charge, provided you give at least 48 hours' notice. Additional reschedules may incur an administrative fee of €25. Rescheduled sessions must take place within 90 days of the original booking date.</p>
+
+    <h2>6. Recordings &amp; Intellectual Property</h2>
+    <p>Your session will be recorded for transcription and production purposes. The final memoir document is yours to keep and share as you wish. Told retains no right to publish, share, or commercialise the content of your memoir without your explicit written consent.</p>
+    <p>Told retains copyright in the editorial craft of the memoir (writing style, structure, presentation). You receive a perpetual, non-exclusive licence to use the completed memoir for personal, family, and non-commercial purposes.</p>
+
+    <h2>7. Confidentiality</h2>
+    <p>Everything you share with us is treated with the utmost discretion. We will never share the content of your sessions or memoirs with third parties, except where required by law. Our team members operate under strict confidentiality agreements.</p>
+
+    <h2>8. Delivery</h2>
+    <p>Completed memoirs for The Remote package are typically delivered within 10–14 business days of your session. We will notify you by email when your memoir is ready. Delivery timelines may vary during busy periods — we will always communicate any delays proactively.</p>
+
+    <h2>9. Limitation of Liability</h2>
+    <p>Told's total liability to you shall not exceed the amount you paid for the service in question. We are not liable for indirect, consequential, or incidental losses. Nothing in these terms limits liability for death, personal injury, or fraud caused by our negligence.</p>
+
+    <h2>10. Governing Law</h2>
+    <p>These terms are governed by the laws of Ireland. Any disputes will be subject to the exclusive jurisdiction of the Irish courts. As a consumer in Ireland, you also have rights under the Consumer Rights Act 2022 and EU consumer protection directives.</p>
+
+    <h2>11. Changes to These Terms</h2>
+    <p>We may update these terms from time to time. We will post any changes on this page and, where significant, notify you by email. Continued use of our services after changes constitutes acceptance of the revised terms.</p>
+
+    <h2>12. Contact</h2>
+    <p>Questions about these terms? We're happy to talk through anything.</p>
+    <p>Email: <a href="mailto:hello@told.ie">hello@told.ie</a><br>
+    Dublin, Ireland</p>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-logo">Told</div>
+        <p class="footer-brand-desc">We preserve family legacies through the lens of professional storytelling and boutique editorial craft.</p>
+        <p class="footer-office">Office</p>
+        <p class="footer-office-val">Dublin, Ireland</p>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <ul><li><a href="#">Instagram</a></li></ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="form.html">Members</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="terms.html">Terms</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 Told. Handcrafted in Dublin.</div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Told — Journal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:    #1C2B1C;
+      --gold:     #C49A55;
+      --cream:    #F6F3EE;
+      --dark:     #1A1A18;
+      --mid:      #4A4845;
+      --lite:     #7A776F;
+      --border:   #DDD8CF;
+      --quote-bg: #2B2925;
+      --warm:     #EDE9E1;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 72px;
+      background: var(--cream);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--green);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--mid);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--green); }
+
+    .btn-enquire {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--cream);
+      background: var(--green);
+      border: none;
+      border-radius: 3px;
+      padding: 10px 22px;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+      letter-spacing: 0.02em;
+    }
+
+    .btn-enquire:hover { opacity: 0.85; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      text-align: center;
+      padding: 80px 24px 64px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .eyebrow {
+      font-family: 'La Belle Aurore', cursive;
+      font-size: 1.5rem;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 500;
+      color: var(--dark);
+      line-height: 1.25;
+      max-width: 500px;
+      margin: 0 auto 16px;
+    }
+
+    .page-header p {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      color: var(--lite);
+      font-weight: 300;
+    }
+
+    /* ── JOURNAL GRID ── */
+    .journal-section {
+      max-width: 1040px;
+      margin: 0 auto;
+      padding: 72px 24px 32px;
+    }
+
+    .journal-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .article-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--cream);
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: box-shadow 0.25s, transform 0.25s;
+    }
+
+    .article-card:hover {
+      box-shadow: 0 8px 32px rgba(28, 43, 28, 0.08);
+      transform: translateY(-2px);
+    }
+
+    .card-image {
+      background-color: var(--warm);
+      aspect-ratio: 3 / 2;
+      width: 100%;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle grain texture via pseudo-element */
+    .card-image::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(ellipse at 30% 40%, rgba(196,154,85,0.07) 0%, transparent 60%),
+        radial-gradient(ellipse at 70% 70%, rgba(28,43,28,0.05) 0%, transparent 50%);
+    }
+
+    .card-body {
+      padding: 28px 28px 32px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+
+    .card-date {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.6875rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--lite);
+      margin-bottom: 10px;
+    }
+
+    .card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--dark);
+      line-height: 1.35;
+      margin-bottom: 12px;
+    }
+
+    .card-excerpt {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9375rem;
+      color: var(--mid);
+      line-height: 1.7;
+      font-weight: 300;
+      flex: 1;
+      margin-bottom: 20px;
+    }
+
+    .card-link {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--green);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      transition: gap 0.2s, opacity 0.2s;
+      border-bottom: 1px solid transparent;
+      padding-bottom: 1px;
+    }
+
+    .card-link:hover {
+      gap: 8px;
+      border-bottom-color: var(--gold);
+    }
+
+    /* ── JOURNAL NOTE ── */
+    .journal-note {
+      text-align: center;
+      padding: 48px 24px 80px;
+    }
+
+    .journal-note p {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9375rem;
+      color: var(--lite);
+      font-weight: 300;
+      font-style: italic;
+      max-width: 440px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--quote-bg);
+      color: rgba(255,255,255,0.55);
+      padding: 72px 60px 40px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 60px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 32px;
+    }
+
+    .footer-brand-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: #fff;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .footer-brand-desc {
+      font-size: 13px;
+      line-height: 1.7;
+      max-width: 280px;
+      margin-bottom: 24px;
+    }
+
+    .footer-office {
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .footer-office-val {
+      font-size: 13px;
+    }
+
+    .footer-col h4 {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-col a {
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: #fff; }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav {
+        padding: 0 20px;
+        height: 64px;
+      }
+
+      .nav-links {
+        gap: 20px;
+      }
+
+      .nav-links li:not(:last-child):not(:nth-last-child(2)) {
+        display: none;
+      }
+
+      .page-header {
+        padding: 56px 20px 48px;
+      }
+
+      .journal-section {
+        padding: 48px 20px 24px;
+      }
+
+      .journal-grid {
+        grid-template-columns: 1fr;
+        gap: 28px;
+      }
+
+      .journal-note {
+        padding: 40px 20px 64px;
+      }
+
+      footer { padding: 56px 24px 32px; }
+      .footer-inner { grid-template-columns: 1fr; gap: 40px; }
+    }
+
+    @media (max-width: 480px) {
+      .nav-links li:not(:last-child) {
+        display: none;
+      }
+
+      .card-body {
+        padding: 20px 20px 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Told</a>
+    <ul class="nav-links">
+      <li><a href="index.html#process">Process</a></li>
+      <li><a href="manifesto.html">Manifesto</a></li>
+      <li><a href="index.html#pricing">Pricing</a></li>
+      <li><button class="btn-enquire" onclick="window.location.href='form.html'">Enquire</button></li>
+    </ul>
+  </nav>
+
+  <header class="page-header">
+    <span class="eyebrow">The Journal</span>
+    <h1>Stories about stories.</h1>
+    <p>Reflections on memory, family, and the craft of listening.</p>
+  </header>
+
+  <section class="journal-section">
+    <div class="journal-grid">
+
+      <article class="article-card">
+        <div class="card-image" role="img" aria-label="Article illustration"></div>
+        <div class="card-body">
+          <p class="card-date">March 2024</p>
+          <h2 class="card-title">The question she'd never been asked</h2>
+          <p class="card-excerpt">She had lived 84 years and raised five children. No one had ever asked her what she wanted to be when she grew up. We spent an afternoon finding out.</p>
+          <a href="#" class="card-link">Read more &rarr;</a>
+        </div>
+      </article>
+
+      <article class="article-card">
+        <div class="card-image" role="img" aria-label="Article illustration"></div>
+        <div class="card-body">
+          <p class="card-date">February 2024</p>
+          <h2 class="card-title">Why the book matters more than the recording</h2>
+          <p class="card-excerpt">A recording captures the voice. A book captures the thought behind it. There's a difference, and it changes what the family holds onto.</p>
+          <a href="#" class="card-link">Read more &rarr;</a>
+        </div>
+      </article>
+
+      <article class="article-card">
+        <div class="card-image" role="img" aria-label="Article illustration"></div>
+        <div class="card-body">
+          <p class="card-date">January 2024</p>
+          <h2 class="card-title">On the right time to begin</h2>
+          <p class="card-excerpt">Families always think there's more time. Sometimes there is. We wrote this for the moments when you feel the window beginning to close.</p>
+          <a href="#" class="card-link">Read more &rarr;</a>
+        </div>
+      </article>
+
+      <article class="article-card">
+        <div class="card-image" role="img" aria-label="Article illustration"></div>
+        <div class="card-body">
+          <p class="card-date">December 2023</p>
+          <h2 class="card-title">What Told is really for</h2>
+          <p class="card-excerpt">It's not about the object, though the object is beautiful. It's about what happens in the room during the two hours before we begin to write.</p>
+          <a href="#" class="card-link">Read more &rarr;</a>
+        </div>
+      </article>
+
+    </div>
+  </section>
+
+  <div class="journal-note">
+    <p>New entries added monthly. No newsletter — just good writing when it's ready.</p>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-logo">Told</div>
+        <p class="footer-brand-desc">We preserve family legacies through the lens of professional storytelling and boutique editorial craft.</p>
+        <p class="footer-office">Office</p><p class="footer-office-val">Dublin, Ireland</p>
+      </div>
+      <div class="footer-col"><h4>Connect</h4><ul><li><a href="#">Instagram</a></li></ul></div>
+      <div class="footer-col"><h4>Company</h4><ul><li><a href="form.html">Members</a></li><li><a href="faq.html">FAQ</a></li><li><a href="terms.html">Terms</a></li><li><a href="privacy.html">Privacy</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">© 2024 Told Memoirs. Handcrafted in Dublin.</div>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Told — FAQ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:    #1C2B1C;
+      --gold:     #C49A55;
+      --cream:    #F6F3EE;
+      --dark:     #1A1A18;
+      --mid:      #4A4845;
+      --lite:     #7A776F;
+      --border:   #DDD8CF;
+      --quote-bg: #2B2925;
+      --warm:     #EDE9E1;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      line-height: 1.6;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 72px;
+      background: var(--cream);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--green);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--mid);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--green); }
+
+    .btn-enquire {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--cream);
+      background: var(--green);
+      border: none;
+      border-radius: 3px;
+      padding: 10px 22px;
+      cursor: pointer;
+      transition: background 0.2s, opacity 0.2s;
+      letter-spacing: 0.02em;
+    }
+
+    .btn-enquire:hover { opacity: 0.85; }
+
+    /* ── PAGE HEADER ── */
+    .page-header {
+      text-align: center;
+      padding: 80px 24px 64px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .eyebrow {
+      font-family: 'La Belle Aurore', cursive;
+      font-size: 1.5rem;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 16px;
+    }
+
+    .page-header h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      font-weight: 500;
+      color: var(--dark);
+      line-height: 1.25;
+      max-width: 560px;
+      margin: 0 auto 16px;
+    }
+
+    .page-header p {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 1rem;
+      color: var(--lite);
+      font-weight: 300;
+    }
+
+    /* ── ACCORDION ── */
+    .faq-section {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 72px 24px 80px;
+    }
+
+    .accordion-item {
+      border-bottom: 1px solid var(--border);
+    }
+
+    .accordion-item:first-child {
+      border-top: 1px solid var(--border);
+    }
+
+    .accordion-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 24px 0;
+      text-align: left;
+      gap: 20px;
+    }
+
+    .accordion-trigger:focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+      border-radius: 2px;
+    }
+
+    .accordion-question {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.125rem;
+      font-weight: 400;
+      color: var(--dark);
+      line-height: 1.4;
+    }
+
+    .accordion-icon {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      font-size: 1.1rem;
+      font-weight: 300;
+      transition: background 0.2s, border-color 0.2s;
+      font-family: 'DM Sans', sans-serif;
+      line-height: 1;
+    }
+
+    .accordion-trigger[aria-expanded="true"] .accordion-icon {
+      background: var(--warm);
+      border-color: var(--gold);
+    }
+
+    .accordion-trigger[aria-expanded="true"] .accordion-question {
+      color: var(--green);
+    }
+
+    .accordion-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .accordion-body.open {
+      max-height: 400px;
+    }
+
+    .accordion-answer {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9375rem;
+      color: var(--mid);
+      line-height: 1.75;
+      padding: 0 40px 28px 0;
+      font-weight: 300;
+    }
+
+    .accordion-answer a {
+      color: var(--green);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+      transition: opacity 0.2s;
+    }
+
+    .accordion-answer a:hover { opacity: 0.7; }
+
+    /* ── CTA STRIP ── */
+    .cta-strip {
+      background: var(--warm);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      text-align: center;
+      padding: 56px 24px;
+    }
+
+    .cta-strip p {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.375rem;
+      font-weight: 400;
+      color: var(--dark);
+      margin-bottom: 16px;
+    }
+
+    .cta-strip a {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--green);
+      text-decoration: none;
+      border-bottom: 1px solid var(--gold);
+      padding-bottom: 2px;
+      transition: opacity 0.2s;
+    }
+
+    .cta-strip a:hover { opacity: 0.7; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--quote-bg);
+      color: rgba(255,255,255,0.55);
+      padding: 72px 60px 40px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 60px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 32px;
+    }
+
+    .footer-brand-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: #fff;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .footer-brand-desc {
+      font-size: 13px;
+      line-height: 1.7;
+      max-width: 280px;
+      margin-bottom: 24px;
+    }
+
+    .footer-office {
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .footer-office-val {
+      font-size: 13px;
+    }
+
+    .footer-col h4 {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-col a {
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: #fff; }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav {
+        padding: 0 20px;
+        height: 64px;
+      }
+
+      .nav-links {
+        gap: 20px;
+      }
+
+      .nav-links li:not(:last-child):not(:nth-last-child(2)) {
+        display: none;
+      }
+
+      .page-header {
+        padding: 56px 20px 48px;
+      }
+
+      .faq-section {
+        padding: 48px 20px 64px;
+      }
+
+      .accordion-question {
+        font-size: 1rem;
+      }
+
+      footer { padding: 56px 24px 32px; }
+      .footer-inner { grid-template-columns: 1fr; gap: 40px; }
+    }
+
+    @media (max-width: 480px) {
+      .nav-links li:not(:last-child) {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">Told</a>
+    <ul class="nav-links">
+      <li><a href="index.html#process">Process</a></li>
+      <li><a href="manifesto.html">Manifesto</a></li>
+      <li><a href="index.html#pricing">Pricing</a></li>
+
+      <li><button class="btn-enquire" onclick="window.location.href='form.html'">Enquire</button></li>
+    </ul>
+  </nav>
+
+  <header class="page-header">
+    <span class="eyebrow">Questions</span>
+    <h1>Things people ask before they begin.</h1>
+    <p>If something isn't answered here, just reach out.</p>
+  </header>
+
+  <section class="faq-section">
+    <div class="accordion-item">
+      <button class="accordion-trigger" aria-expanded="false" data-index="0">
+        <span class="accordion-question">What exactly is Told?</span>
+        <span class="accordion-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="accordion-body" id="faq-body-0">
+        <p class="accordion-answer">Told is a professional memoir service based in Dublin. We sit with your elder, conduct a deep two-hour interview, and transform what they share into a beautifully edited narrative — delivered as a physical hardcover volume and a digital heirloom.</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-trigger" aria-expanded="false" data-index="1">
+        <span class="accordion-question">Who is this for?</span>
+        <span class="accordion-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="accordion-body" id="faq-body-1">
+        <p class="accordion-answer">Anyone who wants to preserve the voice of someone important to them — a grandparent, parent, or great-grandparent — before time makes it impossible. Our clients are typically adult children or grandchildren who want to give something genuinely meaningful.</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-trigger" aria-expanded="false" data-index="2">
+        <span class="accordion-question">How does the interview actually work?</span>
+        <span class="accordion-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="accordion-body" id="faq-body-2">
+        <p class="accordion-answer">One of our writers will sit with your elder — either via video call or in person — for approximately two hours. The session is conversational, not formal. We follow the story wherever it leads. Most people tell us the person being interviewed says it was one of the best conversations they've ever had.</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-trigger" aria-expanded="false" data-index="3">
+        <span class="accordion-question">What do I receive at the end?</span>
+        <span class="accordion-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="accordion-body" id="faq-body-3">
+        <p class="accordion-answer">The Remote tier includes a curated digital heirloom — a beautifully typeset PDF narrative, professionally edited and ready to share or print. The Bespoke tier adds a hand-bound linen hardcover volume, professional portrait photography, and an audio archive of the session.</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-trigger" aria-expanded="false" data-index="4">
+        <span class="accordion-question">How long does the whole process take?</span>
+        <span class="accordion-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="accordion-body" id="faq-body-4">
+        <p class="accordion-answer">From your session to your finished heirloom, typically four to six weeks. We take the editing seriously — this isn't a transcript.</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-trigger" aria-expanded="false" data-index="5">
+        <span class="accordion-question">What if they're nervous or unsure?</span>
+        <span class="accordion-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="accordion-body" id="faq-body-5">
+        <p class="accordion-answer">This is the most common thing we hear, and it almost always disappears within the first ten minutes. Our writers are trained to make people feel at ease. The questions are designed to open doors, not put anyone on the spot.</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-trigger" aria-expanded="false" data-index="6">
+        <span class="accordion-question">Can I gift this to someone?</span>
+        <span class="accordion-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="accordion-body" id="faq-body-6">
+        <p class="accordion-answer">Yes — and it makes a remarkable gift. You purchase the tier, we send a beautiful gift card to the recipient, and they book the session at a pace that suits them. Email us at <a href="mailto:hello@told.ie">hello@told.ie</a> to arrange a gift booking.</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-trigger" aria-expanded="false" data-index="7">
+        <span class="accordion-question">What if they speak another language?</span>
+        <span class="accordion-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="accordion-body" id="faq-body-7">
+        <p class="accordion-answer">We work primarily in English, but please reach out if this is a consideration. In many cases we can accommodate or find a solution — we'd rather find a way than turn a family away.</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-trigger" aria-expanded="false" data-index="8">
+        <span class="accordion-question">Is there a cancellation policy?</span>
+        <span class="accordion-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="accordion-body" id="faq-body-8">
+        <p class="accordion-answer">Sessions can be rescheduled up to 48 hours in advance at no charge. We understand that life — especially with elders — can be unpredictable, and we handle every situation with care.</p>
+      </div>
+    </div>
+
+    <div class="accordion-item">
+      <button class="accordion-trigger" aria-expanded="false" data-index="9">
+        <span class="accordion-question">How do I get started?</span>
+        <span class="accordion-icon" aria-hidden="true">+</span>
+      </button>
+      <div class="accordion-body" id="faq-body-9">
+        <p class="accordion-answer">Choose your tier on the pricing page, complete our short <a href="form.html">intake form</a>, and we'll take it from there. The whole booking process takes about five minutes.</p>
+      </div>
+    </div>
+  </section>
+
+  <div class="cta-strip">
+    <p>Still have a question?</p>
+    <a href="mailto:hello@told.ie">Get in touch</a>
+  </div>
+
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-logo">Told</div>
+        <p class="footer-brand-desc">We preserve family legacies through the lens of professional storytelling and boutique editorial craft.</p>
+        <p class="footer-office">Office</p><p class="footer-office-val">Dublin, Ireland</p>
+      </div>
+      <div class="footer-col"><h4>Connect</h4><ul><li><a href="#">Instagram</a></li></ul></div>
+      <div class="footer-col"><h4>Company</h4><ul><li><a href="form.html">Members</a></li><li><a href="faq.html">FAQ</a></li><li><a href="terms.html">Terms</a></li><li><a href="privacy.html">Privacy</a></li></ul></div>
+    </div>
+    <div class="footer-bottom">© 2024 Told Memoirs. Handcrafted in Dublin.</div>
+  </footer>
+
+  <script>
+    (function () {
+      const triggers = document.querySelectorAll('.accordion-trigger');
+
+      triggers.forEach(function (trigger) {
+        trigger.addEventListener('click', function () {
+          const index = this.getAttribute('data-index');
+          const body = document.getElementById('faq-body-' + index);
+          const icon = this.querySelector('.accordion-icon');
+          const isOpen = this.getAttribute('aria-expanded') === 'true';
+
+          // Close all others
+          triggers.forEach(function (other) {
+            if (other !== trigger) {
+              const otherIndex = other.getAttribute('data-index');
+              const otherBody = document.getElementById('faq-body-' + otherIndex);
+              const otherIcon = other.querySelector('.accordion-icon');
+              other.setAttribute('aria-expanded', 'false');
+              otherBody.classList.remove('open');
+              otherIcon.textContent = '+';
+            }
+          });
+
+          // Toggle current
+          if (isOpen) {
+            this.setAttribute('aria-expanded', 'false');
+            body.classList.remove('open');
+            icon.textContent = '+';
+          } else {
+            this.setAttribute('aria-expanded', 'true');
+            body.classList.add('open');
+            icon.textContent = '−';
+          }
+        });
+      });
+    })();
+  </script>
+
+</body>
+</html>

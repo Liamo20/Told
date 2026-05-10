@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Told — Privacy Policy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:    #1C2B1C;
+      --gold:     #C49A55;
+      --cream:    #F6F3EE;
+      --dark:     #1A1A18;
+      --mid:      #4A4845;
+      --lite:     #7A776F;
+      --border:   #DDD8CF;
+      --quote-bg: #2B2925;
+      --warm:     #EDE9E1;
+    }
+
+    html { font-size: 16px; scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 48px;
+      height: 72px;
+      background: var(--cream);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--green);
+      text-decoration: none;
+      letter-spacing: 0.02em;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.875rem;
+      font-weight: 400;
+      color: var(--mid);
+      text-decoration: none;
+      letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover { color: var(--green); }
+
+    .btn-enquire {
+      background: var(--green);
+      color: #fff;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 4px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      letter-spacing: 0.03em;
+      transition: opacity 0.2s;
+    }
+
+    .btn-enquire:hover { opacity: 0.85; }
+
+    /* ── HERO ── */
+    .page-hero {
+      background: var(--green);
+      color: #fff;
+      text-align: center;
+      padding: 80px 24px 72px;
+    }
+
+    .page-hero .eyebrow {
+      font-family: 'La Belle Aurore', cursive;
+      font-size: 1.4rem;
+      color: var(--gold);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .page-hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 500;
+      line-height: 1.2;
+      margin-bottom: 16px;
+    }
+
+    .page-hero .updated {
+      font-size: 0.85rem;
+      color: rgba(255,255,255,0.5);
+      letter-spacing: 0.04em;
+    }
+
+    /* ── CONTENT ── */
+    .legal-wrap {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 72px 24px 100px;
+    }
+
+    .legal-wrap h2 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.25rem;
+      font-weight: 500;
+      color: var(--green);
+      margin: 48px 0 12px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .legal-wrap h2:first-child { margin-top: 0; border-top: none; }
+
+    .legal-wrap p {
+      font-size: 0.975rem;
+      color: var(--mid);
+      margin-bottom: 16px;
+    }
+
+    .legal-wrap ul {
+      list-style: disc;
+      padding-left: 24px;
+      margin-bottom: 16px;
+    }
+
+    .legal-wrap ul li {
+      font-size: 0.975rem;
+      color: var(--mid);
+      margin-bottom: 8px;
+    }
+
+    .legal-wrap a {
+      color: var(--green);
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
+
+    .legal-wrap a:hover { color: var(--gold); }
+
+    .highlight-box {
+      background: var(--warm);
+      border-left: 3px solid var(--gold);
+      padding: 20px 24px;
+      margin: 24px 0;
+      border-radius: 0 4px 4px 0;
+    }
+
+    .highlight-box p {
+      margin: 0;
+      font-size: 0.9rem;
+      color: var(--mid);
+    }
+
+    .rights-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin: 20px 0;
+    }
+
+    .right-card {
+      background: var(--warm);
+      border-radius: 6px;
+      padding: 20px;
+    }
+
+    .right-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--green);
+      margin-bottom: 6px;
+    }
+
+    .right-card p {
+      font-size: 0.85rem;
+      color: var(--lite);
+      margin: 0;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--quote-bg);
+      color: rgba(255,255,255,0.55);
+      padding: 72px 60px 40px;
+    }
+
+    .footer-inner {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 60px;
+      padding-bottom: 48px;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      margin-bottom: 32px;
+    }
+
+    .footer-brand-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      color: #fff;
+      font-weight: 600;
+      margin-bottom: 16px;
+    }
+
+    .footer-brand-desc {
+      font-size: 13px;
+      line-height: 1.7;
+      max-width: 280px;
+      margin-bottom: 24px;
+    }
+
+    .footer-office {
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      margin-bottom: 6px;
+      font-weight: 500;
+    }
+
+    .footer-office-val { font-size: 13px; }
+
+    .footer-col h4 {
+      font-size: 10px;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.35);
+      margin-bottom: 20px;
+      font-weight: 500;
+    }
+
+    .footer-col ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-col a {
+      font-size: 14px;
+      color: rgba(255,255,255,0.55);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-col a:hover { color: #fff; }
+
+    .footer-bottom {
+      max-width: 1200px;
+      margin: 0 auto;
+      font-size: 12px;
+      color: rgba(255,255,255,0.25);
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      nav { padding: 0 20px; }
+      .nav-links { display: none; }
+      .rights-grid { grid-template-columns: 1fr; }
+      footer { padding: 56px 24px 32px; }
+      .footer-inner { grid-template-columns: 1fr; gap: 40px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">Told</a>
+    <ul class="nav-links">
+      <li><a href="manifesto.html">Our Story</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+    </ul>
+    <button class="btn-enquire" onclick="window.location.href='form.html'">Enquire</button>
+  </nav>
+
+  <!-- HERO -->
+  <section class="page-hero">
+    <span class="eyebrow">your data, your story</span>
+    <h1>Privacy Policy</h1>
+    <p class="updated">Last updated: May 2025</p>
+  </section>
+
+  <!-- CONTENT -->
+  <div class="legal-wrap">
+
+    <div class="highlight-box">
+      <p>At Told, privacy is fundamental — not a formality. The stories you share with us are among the most personal things a family can entrust to anyone. We treat your data with the same care we bring to your memoir. This policy explains what we collect, why, and what you can do about it.</p>
+    </div>
+
+    <h2>1. Who We Are</h2>
+    <p>Told Studio is a sole trader operating in Dublin, Ireland. For the purposes of GDPR, we are the data controller for personal data collected through this website and our services.</p>
+    <p>Contact: <a href="mailto:hello@told.ie">hello@told.ie</a> — Dublin, Ireland.</p>
+
+    <h2>2. What Data We Collect</h2>
+    <p>We collect only what we need to deliver your memoir and communicate with you:</p>
+    <ul>
+      <li><strong>Booking information:</strong> Your name, email address, and the name of your memoir subject, collected when you submit the enquiry form.</li>
+      <li><strong>Payment data:</strong> Payment is processed by Stripe. We do not see or store your card number, CVV, or full card details. We receive only a confirmation of payment and a transaction reference.</li>
+      <li><strong>Session recordings:</strong> With your consent, your interview session is recorded for transcription and memoir production. Recordings are stored securely and deleted after your memoir is delivered.</li>
+      <li><strong>Communications:</strong> Emails you send to us and our replies.</li>
+      <li><strong>Website analytics:</strong> If analytics tools are used, we collect anonymised data (page views, device type, referring source) — no personally identifiable information.</li>
+    </ul>
+
+    <h2>3. How We Use Your Data</h2>
+    <p>We use your personal data only for the purposes for which it was collected:</p>
+    <ul>
+      <li>To confirm and manage your booking</li>
+      <li>To conduct and transcribe your interview session</li>
+      <li>To produce and deliver your memoir</li>
+      <li>To send you receipts and service-related communications</li>
+      <li>To respond to enquiries and support requests</li>
+    </ul>
+    <p>We do not use your data for marketing without your explicit opt-in consent, and we never sell your data to third parties.</p>
+
+    <h2>4. Our Legal Basis for Processing</h2>
+    <p>Under GDPR, we rely on the following legal bases:</p>
+    <ul>
+      <li><strong>Contract performance:</strong> Processing necessary to deliver the service you have purchased.</li>
+      <li><strong>Legitimate interests:</strong> Managing our business, preventing fraud, responding to enquiries.</li>
+      <li><strong>Consent:</strong> For session recording and any optional marketing communications. You may withdraw consent at any time.</li>
+      <li><strong>Legal obligation:</strong> Where we are required to retain data for tax or regulatory purposes (typically 7 years for financial records under Irish law).</li>
+    </ul>
+
+    <h2>5. Your Rights Under GDPR</h2>
+    <p>As a data subject in the EU/EEA, you have the following rights. To exercise any of them, email <a href="mailto:hello@told.ie">hello@told.ie</a> — we will respond within 30 days.</p>
+
+    <div class="rights-grid">
+      <div class="right-card">
+        <h3>Right of Access</h3>
+        <p>Request a copy of the personal data we hold about you.</p>
+      </div>
+      <div class="right-card">
+        <h3>Right to Rectification</h3>
+        <p>Ask us to correct inaccurate or incomplete data.</p>
+      </div>
+      <div class="right-card">
+        <h3>Right to Erasure</h3>
+        <p>Ask us to delete your data where there is no compelling reason for us to keep it.</p>
+      </div>
+      <div class="right-card">
+        <h3>Right to Restrict Processing</h3>
+        <p>Ask us to pause processing your data in certain circumstances.</p>
+      </div>
+      <div class="right-card">
+        <h3>Right to Portability</h3>
+        <p>Receive your data in a structured, machine-readable format.</p>
+      </div>
+      <div class="right-card">
+        <h3>Right to Object</h3>
+        <p>Object to processing based on legitimate interests or for direct marketing.</p>
+      </div>
+    </div>
+
+    <p>You also have the right to lodge a complaint with the Data Protection Commission (DPC) at <a href="https://www.dataprotection.ie" target="_blank" rel="noopener">dataprotection.ie</a> if you believe we have mishandled your data.</p>
+
+    <h2>6. Data Sharing &amp; Third Parties</h2>
+    <p>We share your data with a small number of trusted service providers, only to the extent necessary:</p>
+    <ul>
+      <li><strong>Stripe</strong> — payment processing. Stripe is PCI-DSS compliant and processes payments under its own privacy policy.</li>
+      <li><strong>Netlify</strong> — website hosting. Our site is hosted on Netlify's infrastructure in the EU/US. Netlify operates under a DPA compliant with GDPR.</li>
+      <li><strong>Google</strong> — fonts and (if used) analytics. Google Fonts may log your IP address when loading fonts.</li>
+    </ul>
+    <p>We do not share memoir content, session recordings, or personal story details with any third party, ever.</p>
+
+    <h2>7. International Data Transfers</h2>
+    <p>Some of our service providers (Stripe, Netlify) may process data outside the EEA. Where this occurs, we ensure appropriate safeguards are in place — including Standard Contractual Clauses (SCCs) approved by the European Commission.</p>
+
+    <h2>8. Data Retention</h2>
+    <p>We retain your data only for as long as necessary:</p>
+    <ul>
+      <li><strong>Session recordings:</strong> Deleted within 30 days of memoir delivery.</li>
+      <li><strong>Booking and contact details:</strong> Retained for up to 2 years for customer service purposes, then deleted.</li>
+      <li><strong>Financial records:</strong> Retained for 7 years in accordance with Irish Revenue requirements.</li>
+    </ul>
+
+    <h2>9. Security</h2>
+    <p>We take reasonable technical and organisational measures to protect your data — including encrypted connections (HTTPS), secure file storage, and restricted access to personal information. No method of transmission over the internet is 100% secure; we will notify you promptly in the event of any breach affecting your data.</p>
+
+    <h2>10. Cookies</h2>
+    <p>Our website uses minimal cookies. Essential cookies are used for site functionality. We do not use tracking or advertising cookies. If we introduce analytics cookies in future, we will update this policy and seek your consent where required.</p>
+
+    <h2>11. Children's Privacy</h2>
+    <p>Our services are intended for adults aged 18 and over. We do not knowingly collect personal data from anyone under 18. Memoirs may reference family members of any age, but we only contract with adult clients.</p>
+
+    <h2>12. Changes to This Policy</h2>
+    <p>We may update this privacy policy to reflect changes in our practices or legal requirements. We will post any changes on this page with a revised "last updated" date. For significant changes, we will notify active clients by email.</p>
+
+    <h2>13. Contact &amp; Complaints</h2>
+    <p>For any privacy-related questions or to exercise your rights:</p>
+    <p>Email: <a href="mailto:hello@told.ie">hello@told.ie</a><br>
+    Told Studio, Dublin, Ireland</p>
+    <p>If you are not satisfied with our response, you may contact the Data Protection Commission: <a href="https://www.dataprotection.ie" target="_blank" rel="noopener">dataprotection.ie</a></p>
+
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-inner">
+      <div>
+        <div class="footer-brand-logo">Told</div>
+        <p class="footer-brand-desc">We preserve family legacies through the lens of professional storytelling and boutique editorial craft.</p>
+        <p class="footer-office">Office</p>
+        <p class="footer-office-val">Dublin, Ireland</p>
+      </div>
+      <div class="footer-col">
+        <h4>Connect</h4>
+        <ul><li><a href="#">Instagram</a></li></ul>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="form.html">Members</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="terms.html">Terms</a></li>
+          <li><a href="privacy.html">Privacy</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">© 2025 Told. Handcrafted in Dublin.</div>
+  </footer>
+
+</body>
+</html>

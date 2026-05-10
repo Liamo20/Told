@@ -1,0 +1,1132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Told — Your Family's Story Begins</title>
+  <script src="https://js.stripe.com/v3/"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=La+Belle+Aurore&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:      #1C2B1C;
+      --green-soft: rgba(28,43,28,0.05);
+      --gold:       #C49A55;
+      --terracotta: #B5704A;
+      --cream:      #F6F3EE;
+      --panel:      #DDD5C3;
+      --dark:       #1A1A18;
+      --mid:        #4A4845;
+      --lite:       #9A9690;
+      --border:     #C8C2B8;
+      --error:      #8B5E3C;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--cream);
+      color: var(--dark);
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    /* ── PROGRESS BAR ── */
+    #progressBar {
+      position: fixed;
+      top: 0; left: 0;
+      height: 2px;
+      background: var(--green);
+      z-index: 300;
+      width: 20%;
+      transition: width 0.7s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* ── SHELL ── */
+    .form-shell {
+      display: grid;
+      grid-template-columns: 38fr 62fr;
+      min-height: 100vh;
+    }
+
+    /* ── LEFT PANEL ── */
+    .left-panel {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      background: var(--panel);
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid rgba(0,0,0,0.07);
+    }
+
+    .illustration-zone {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .illus {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 64px 52px 32px;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      pointer-events: none;
+    }
+    .illus.active { opacity: 1; }
+    .illus svg { width: 100%; max-width: 200px; height: auto; }
+
+    /* ── STEP NAV ── */
+    .step-nav {
+      padding: 28px 40px 36px;
+      border-top: 1px solid rgba(0,0,0,0.07);
+      flex-shrink: 0;
+    }
+
+    .step-nav ul { list-style: none; display: flex; flex-direction: column; gap: 16px; }
+
+    .step-item {
+      font-size: 13px;
+      color: rgba(154,150,144,0.5);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      letter-spacing: 0.01em;
+      transition: color 0.3s;
+      font-weight: 300;
+    }
+    .step-item.active  { color: var(--green); font-weight: 500; }
+    .step-item.done    { color: #908C86; }
+
+    .step-check {
+      width: 14px; height: 14px;
+      flex-shrink: 0;
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    .step-item.done .step-check { opacity: 1; }
+
+    /* ── RIGHT PANEL ── */
+    .right-panel { background: var(--cream); }
+
+    /* ── STEP CONTENT ── */
+    .step-pane {
+      display: none;
+      min-height: 100vh;
+      flex-direction: column;
+      padding: 64px 80px 64px;
+      animation: paneIn 0.4s ease both;
+    }
+    .step-pane.active { display: flex; }
+
+    @keyframes paneIn {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── BACK BUTTON ── */
+    .btn-back {
+      background: none; border: none; cursor: pointer;
+      color: var(--lite); display: inline-flex; align-items: center;
+      gap: 6px; font-family: 'DM Sans', sans-serif;
+      font-size: 13px; padding: 0; margin-bottom: 44px;
+      transition: color 0.2s;
+    }
+    .btn-back:hover { color: var(--dark); }
+    .btn-back svg { width: 16px; height: 16px; }
+
+    /* ── HEADINGS ── */
+    .step-h {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(26px, 3vw, 40px);
+      font-weight: 500;
+      color: var(--dark);
+      line-height: 1.15;
+      letter-spacing: -0.02em;
+      margin-bottom: 10px;
+    }
+    .step-sub {
+      font-size: 15px; color: var(--lite);
+      margin-bottom: 52px; font-weight: 300;
+    }
+
+    /* ── ARRIVAL ── */
+    .arrival-center {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; max-width: 460px;
+      margin: 0 auto; padding: 40px 0;
+    }
+    .arrival-center .step-h { font-size: clamp(24px, 2.6vw, 36px); }
+
+    .btn-begin {
+      margin-top: 44px;
+      background: var(--green); color: var(--cream);
+      border: none; padding: 16px 52px;
+      font-family: 'DM Sans', sans-serif; font-size: 15px;
+      cursor: pointer; border-radius: 100px;
+      letter-spacing: 0.04em;
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .btn-begin:hover { opacity: 0.85; transform: translateY(-1px); }
+
+    /* ── FORM FIELDS ── */
+    .field { margin-bottom: 38px; }
+
+    .field-label {
+      display: block; font-size: 11px; font-weight: 500;
+      color: var(--mid); letter-spacing: 0.1em;
+      text-transform: uppercase; margin-bottom: 10px;
+    }
+
+    .field-input {
+      width: 100%; background: transparent; border: none;
+      border-bottom: 1.5px solid var(--border);
+      padding: 10px 0 13px;
+      font-family: 'DM Sans', sans-serif; font-size: 16px;
+      color: var(--dark); outline: none;
+      transition: border-color 0.25s;
+    }
+    .field-input:focus { border-bottom-color: var(--green); }
+    .field-input::placeholder { color: var(--lite); font-size: 15px; }
+
+    .field-input.narrow { max-width: 140px; }
+
+    .field-textarea {
+      width: 100%; background: transparent;
+      border: 1.5px solid var(--border);
+      padding: 14px 16px;
+      font-family: 'DM Sans', sans-serif; font-size: 15px;
+      color: var(--dark); outline: none; resize: none;
+      min-height: 130px; line-height: 1.65;
+      transition: border-color 0.25s;
+    }
+    .field-textarea:focus { border-color: var(--green); }
+    .field-textarea::placeholder { font-style: italic; color: var(--lite); font-size: 14px; }
+
+    .field-helper { font-size: 12px; font-style: italic; color: var(--lite); margin-top: 7px; }
+
+    .field-error {
+      font-size: 12px; color: var(--error);
+      margin-top: 7px; opacity: 0;
+      transition: opacity 0.2s; height: 0; overflow: hidden;
+    }
+    .field-error.show { opacity: 1; height: auto; }
+
+    /* ── PILLS ── */
+    .pill-row { display: flex; flex-wrap: wrap; gap: 10px; }
+
+    .pill {
+      border: 1.5px solid var(--border); padding: 8px 20px;
+      border-radius: 100px; font-size: 14px;
+      font-family: 'DM Sans', sans-serif; color: var(--mid);
+      cursor: pointer; background: transparent;
+      transition: border-color 0.2s, background 0.2s, color 0.2s;
+    }
+    .pill:hover { border-color: var(--green); color: var(--dark); }
+    .pill.on { background: var(--green); border-color: var(--green); color: var(--cream); }
+
+    /* ── DATE PICKER ── */
+    .cal-wrap {
+      border: 1.5px solid var(--border);
+      padding: 24px 28px 20px;
+      background: var(--cream);
+      user-select: none;
+    }
+
+    .cal-header {
+      display: flex; align-items: center;
+      justify-content: space-between; margin-bottom: 20px;
+    }
+
+    .cal-month {
+      font-family: 'Playfair Display', serif;
+      font-size: 17px; font-weight: 500; color: var(--dark);
+    }
+
+    .cal-nav {
+      background: none; border: none; cursor: pointer;
+      color: var(--lite); padding: 4px 8px; font-size: 18px;
+      transition: color 0.2s; line-height: 1;
+    }
+    .cal-nav:hover { color: var(--dark); }
+
+    .cal-grid {
+      width: 100%; border-collapse: collapse;
+    }
+
+    .cal-grid th {
+      font-size: 11px; text-transform: uppercase;
+      letter-spacing: 0.08em; color: var(--lite);
+      font-weight: 400; padding: 0 0 10px;
+      text-align: center;
+    }
+
+    .cal-grid td {
+      text-align: center; padding: 3px;
+    }
+
+    .cal-day {
+      width: 36px; height: 36px;
+      border-radius: 50%; border: none;
+      background: none; cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px; color: var(--mid);
+      transition: background 0.15s, color 0.15s;
+      display: inline-flex; align-items: center;
+      justify-content: center;
+    }
+    .cal-day:hover:not(:disabled) { background: rgba(28,43,28,0.08); color: var(--dark); }
+    .cal-day.today { border: 1.5px solid var(--green); color: var(--green); font-weight: 500; }
+    .cal-day.selected { background: var(--green); color: var(--cream) !important; border: none; }
+    .cal-day:disabled { color: var(--border); cursor: default; opacity: 0.5; }
+
+    /* ── TIME SLOTS ── */
+    .time-slots {
+      margin-top: 28px; padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .time-label {
+      font-size: 11px; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--lite);
+      font-weight: 400; margin-bottom: 14px;
+      display: block;
+    }
+
+    .time-grid {
+      display: flex; flex-wrap: wrap; gap: 10px;
+    }
+
+    .time-pill {
+      border: 1.5px solid var(--border); padding: 7px 18px;
+      border-radius: 100px; font-size: 13px;
+      font-family: 'DM Sans', sans-serif; color: var(--mid);
+      cursor: pointer; background: transparent;
+      transition: border-color 0.2s, background 0.2s, color 0.2s;
+    }
+    .time-pill:hover { border-color: var(--green); color: var(--dark); }
+    .time-pill.on { background: var(--green); border-color: var(--green); color: var(--cream); }
+
+    /* ── CONTROLS ── */
+    .controls {
+      margin-top: auto; padding-top: 48px;
+      display: flex; justify-content: flex-end;
+    }
+
+    .btn-continue {
+      background: var(--green); color: var(--cream);
+      border: none; padding: 14px 44px;
+      font-family: 'DM Sans', sans-serif; font-size: 14px;
+      cursor: pointer; letter-spacing: 0.05em;
+      transition: opacity 0.2s;
+    }
+    .btn-continue:hover:not(:disabled) { opacity: 0.85; }
+    .btn-continue:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* ── CONFIRMATION ── */
+    .confirm-inner {
+      flex: 1; display: flex; flex-direction: column;
+      align-items: flex-start; max-width: 520px;
+      padding: 20px 0;
+    }
+
+    .confirm-wordmark {
+      font-family: 'Playfair Display', serif;
+      font-size: 26px; font-weight: 600;
+      letter-spacing: -0.02em; margin-bottom: 10px;
+      align-self: center;
+    }
+
+    .confirm-ornament {
+      align-self: center;
+      letter-spacing: 0.4em; color: var(--border);
+      font-size: 14px; margin-bottom: 48px;
+    }
+
+    .confirm-note {
+      font-family: 'Playfair Display', serif;
+      font-style: italic; color: #7A6E60;
+      font-size: 18px; line-height: 1.7;
+      margin-bottom: 16px;
+    }
+
+    .confirm-sig {
+      font-family: 'La Belle Aurore', cursive;
+      font-size: 28px; color: var(--mid);
+      margin-bottom: 52px;
+    }
+
+    .summary-card {
+      width: 100%; border: 1.5px solid var(--border);
+      padding: 24px 28px; margin-bottom: 28px;
+    }
+
+    .summary-row {
+      display: flex; justify-content: space-between;
+      align-items: baseline; padding: 10px 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05); font-size: 14px;
+    }
+    .summary-row:last-child { border-bottom: none; }
+    .s-key { color: var(--lite); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; }
+    .s-val { color: var(--dark); font-weight: 500; text-align: right; max-width: 60%; }
+
+    .confirm-email {
+      font-size: 13px; color: var(--lite);
+      text-align: center; width: 100%;
+    }
+
+    /* ── PAYMENT ── */
+    .order-summary {
+      border: 1.5px solid var(--border);
+      padding: 20px 24px; margin-bottom: 36px;
+      display: flex; align-items: center;
+      justify-content: space-between;
+      background: rgba(28,43,28,0.03);
+    }
+    .order-summary-left { display: flex; flex-direction: column; gap: 3px; }
+    .order-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 500; color: var(--dark); }
+    .order-desc  { font-size: 12px; color: var(--lite); }
+    .order-price { font-family: 'Playfair Display', serif; font-size: 24px; color: var(--dark); font-weight: 400; }
+
+    .card-row { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+
+    .card-input-wrap { position: relative; }
+    .card-icon {
+      position: absolute; right: 0; top: 50%; transform: translateY(-50%);
+      color: var(--lite); pointer-events: none;
+    }
+    .card-icon svg { width: 22px; height: 22px; }
+
+    /* ── STRIPE ELEMENT ── */
+    .stripe-wrap {
+      border-bottom: 1.5px solid var(--border);
+      padding: 13px 0 14px;
+      transition: border-color 0.25s;
+    }
+    .stripe-wrap.focused { border-color: var(--green); }
+
+    .stripe-error {
+      font-size: 12px; color: var(--error);
+      margin-top: 10px; min-height: 18px;
+    }
+
+    .pay-btn {
+      width: 100%; background: var(--green); color: var(--cream);
+      border: none; padding: 17px;
+      font-family: 'DM Sans', sans-serif; font-size: 15px;
+      cursor: pointer; letter-spacing: 0.05em; margin-top: 32px;
+      transition: opacity 0.2s; display: flex;
+      align-items: center; justify-content: center; gap: 10px;
+    }
+    .pay-btn:hover:not(:disabled) { opacity: 0.88; }
+    .pay-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .pay-btn svg { width: 16px; height: 16px; }
+
+    .secure-note {
+      display: flex; align-items: center; justify-content: center;
+      gap: 6px; font-size: 12px; color: var(--lite);
+      margin-top: 14px;
+    }
+    .secure-note svg { width: 12px; height: 12px; }
+
+    /* ── SPACER for step 3 emotional question ── */
+    .breathing-room { margin-top: 56px; }
+
+    /* ── MOBILE ── */
+    @media (max-width: 768px) {
+      .left-panel { display: none; }
+      .form-shell { grid-template-columns: 1fr; }
+      .step-pane { padding: 44px 24px 48px; }
+      .format-grid { grid-template-columns: 1fr; }
+      .btn-continue { width: 100%; text-align: center; }
+      .confirm-inner { max-width: 100%; }
+    }
+
+    @media (max-width: 480px) {
+      .step-pane { padding: 36px 20px 40px; }
+      .step-h { font-size: 26px; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progressBar"></div>
+
+<div class="form-shell">
+
+  <!-- ══════════════════════════════════════════
+       LEFT PANEL
+  ══════════════════════════════════════════ -->
+  <aside class="left-panel">
+
+    <div class="illustration-zone">
+
+      <!-- Step 1: Candle -->
+      <div class="illus active" id="illus-1">
+        <svg viewBox="0 0 200 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Flame -->
+          <path d="M100 88 C97 80 91 68 95 53 C97 43 100 33 100 24 C100 24 103 43 109 55 C115 68 107 80 100 88Z" stroke="#4A4845" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Inner flame glow hint -->
+          <path d="M100 84 C98 78 95 70 97 60 C98 53 100 46 100 40 C100 40 102 53 105 61 C108 70 104 78 100 84Z" stroke="#C49A55" stroke-width="1" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+          <!-- Wick -->
+          <path d="M100 89 L100 97" stroke="#4A4845" stroke-width="1.6" stroke-linecap="round"/>
+          <!-- Candle body -->
+          <path d="M84 97 C84 95 85 94 87 94 L113 94 C115 94 116 95 116 97 L116 218 C116 222 113 225 109 225 L91 225 C87 225 84 222 84 218 Z" stroke="#4A4845" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Wax drips -->
+          <path d="M85 142 C82 148 82 156 85 159" stroke="#4A4845" stroke-width="1.3" stroke-linecap="round"/>
+          <path d="M115 168 C118 174 118 181 115 184" stroke="#4A4845" stroke-width="1.3" stroke-linecap="round"/>
+          <!-- Holder plate -->
+          <ellipse cx="100" cy="226" rx="26" ry="5" stroke="#4A4845" stroke-width="1.6"/>
+          <path d="M74 228 Q74 238 100 240 Q126 238 126 228" stroke="#4A4845" stroke-width="1.4" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
+
+      <!-- Step 2: Envelope -->
+      <div class="illus" id="illus-2">
+        <svg viewBox="0 0 240 175" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Body -->
+          <rect x="18" y="60" width="204" height="112" rx="3" stroke="#4A4845" stroke-width="1.8"/>
+          <!-- Open flap -->
+          <path d="M18 60 L120 18 L222 60" stroke="#4A4845" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Bottom folds -->
+          <path d="M18 172 L88 116" stroke="#4A4845" stroke-width="1.4" stroke-linecap="round"/>
+          <path d="M222 172 L152 116" stroke="#4A4845" stroke-width="1.4" stroke-linecap="round"/>
+          <!-- Letter partially visible -->
+          <path d="M72 62 L72 38 L148 38 L148 62" stroke="#4A4845" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Text lines on letter -->
+          <path d="M84 47 L136 47" stroke="#4A4845" stroke-width="1" stroke-linecap="round" opacity="0.45"/>
+          <path d="M84 55 L122 55" stroke="#4A4845" stroke-width="1" stroke-linecap="round" opacity="0.35"/>
+        </svg>
+      </div>
+
+      <!-- Step 3: Two Hands -->
+      <div class="illus" id="illus-3">
+        <svg viewBox="0 0 200 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Older hand — left, larger, palm up -->
+          <path d="M28 200 C26 185 24 170 28 158 L28 110 C28 106 31 104 35 104 L35 85 C35 81 38 78 42 78 C46 78 49 81 49 85 L49 100 L49 78 C49 74 52 71 56 71 C60 71 63 74 63 78 L63 98 L63 75 C63 71 66 68 70 68 C74 68 77 71 77 75 L77 98 L77 86 C77 82 80 79 84 79 C88 79 91 82 91 86 L91 130 L98 116 C100 112 104 111 107 113 C110 116 110 120 108 123 L91 158 C89 168 86 185 84 200 Z" stroke="#4A4845" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Wrinkle hint on older hand -->
+          <path d="M38 140 C42 137 46 137 50 140" stroke="#4A4845" stroke-width="0.9" stroke-linecap="round" opacity="0.5"/>
+
+          <!-- Younger hand — right, smaller, resting in/on older hand -->
+          <path d="M116 190 C114 178 113 165 116 154 L116 112 C116 109 118 107 121 107 L121 90 C121 87 123 84 126 84 C129 84 131 87 131 90 L131 104 L131 86 C131 83 133 80 136 80 C139 80 141 83 141 86 L141 103 L141 84 C141 81 143 78 146 78 C149 78 151 81 151 84 L151 103 L151 92 C151 89 153 86 156 86 C159 86 161 89 161 92 L161 132 L167 120 C168 117 171 116 174 118 C176 120 176 124 175 126 L161 155 C159 164 157 178 155 190 Z" stroke="#4A4845" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+      <!-- Step 4: Window -->
+      <div class="illus" id="illus-4">
+        <svg viewBox="0 0 200 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Outer frame -->
+          <rect x="28" y="28" width="144" height="186" rx="2" stroke="#4A4845" stroke-width="1.8"/>
+          <!-- Horizontal rail -->
+          <path d="M28 120 L172 120" stroke="#4A4845" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Vertical mullion -->
+          <path d="M100 28 L100 214" stroke="#4A4845" stroke-width="1.5" stroke-linecap="round"/>
+          <!-- Sill -->
+          <path d="M18 214 Q18 222 100 224 Q182 222 182 214" stroke="#4A4845" stroke-width="1.6" stroke-linecap="round"/>
+          <!-- Light rays upper left pane -->
+          <path d="M36 40 L76 88" stroke="#4A4845" stroke-width="0.8" stroke-linecap="round" opacity="0.25"/>
+          <path d="M50 34 L86 74" stroke="#4A4845" stroke-width="0.8" stroke-linecap="round" opacity="0.18"/>
+          <path d="M66 32 L94 62" stroke="#4A4845" stroke-width="0.8" stroke-linecap="round" opacity="0.12"/>
+          <!-- Light rays upper right pane -->
+          <path d="M108 40 L148 88" stroke="#4A4845" stroke-width="0.8" stroke-linecap="round" opacity="0.25"/>
+          <path d="M122 34 L158 74" stroke="#4A4845" stroke-width="0.8" stroke-linecap="round" opacity="0.18"/>
+          <!-- Soft curtain left -->
+          <path d="M28 28 C20 52 22 84 27 112 C22 132 20 164 27 206" stroke="#4A4845" stroke-width="1.4" stroke-linecap="round"/>
+          <!-- Soft curtain right -->
+          <path d="M172 28 C180 52 178 84 173 112 C178 132 180 164 173 206" stroke="#4A4845" stroke-width="1.4" stroke-linecap="round"/>
+        </svg>
+      </div>
+
+      <!-- Step 5: Pen signing -->
+      <div class="illus" id="illus-5">
+        <svg viewBox="0 0 200 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Document / receipt -->
+          <rect x="42" y="30" width="120" height="158" rx="2" stroke="#4A4845" stroke-width="1.7"/>
+          <!-- Lines suggesting content -->
+          <path d="M62 62 L142 62" stroke="#4A4845" stroke-width="1.1" stroke-linecap="round" opacity="0.45"/>
+          <path d="M62 78 L130 78" stroke="#4A4845" stroke-width="1.1" stroke-linecap="round" opacity="0.35"/>
+          <path d="M62 94 L138 94" stroke="#4A4845" stroke-width="1.1" stroke-linecap="round" opacity="0.3"/>
+          <!-- Price line -->
+          <path d="M62 120 L104 120" stroke="#4A4845" stroke-width="1.3" stroke-linecap="round" opacity="0.5"/>
+          <path d="M118 120 L142 120" stroke="#4A4845" stroke-width="1.6" stroke-linecap="round"/>
+          <!-- Signature line -->
+          <path d="M62 158 L142 158" stroke="#4A4845" stroke-width="1" stroke-linecap="round" opacity="0.3"/>
+          <!-- Signature flourish (gold) -->
+          <path d="M66 152 C72 146 80 150 84 148 C88 146 90 142 96 144 C100 146 98 152 104 150" stroke="#C49A55" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+          <!-- Pen body angled -->
+          <path d="M130 200 L168 108" stroke="#4A4845" stroke-width="5" stroke-linecap="round"/>
+          <path d="M130 200 L168 108" stroke="var(--panel)" stroke-width="2" stroke-linecap="round"/>
+          <!-- Pen nib -->
+          <path d="M130 200 L124 212 L134 206 Z" stroke="#4A4845" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Ink dot -->
+          <circle cx="127" cy="208" r="2" fill="#4A4845" opacity="0.4"/>
+        </svg>
+      </div>
+
+      <!-- Step 6: Book with ribbon -->
+      <div class="illus" id="illus-6">
+        <svg viewBox="0 0 220 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <!-- Spine -->
+          <path d="M30 36 C28 36 26 38 26 40 L26 220 C26 222 28 224 30 224 L48 224 L48 36 Z" stroke="#4A4845" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Front cover -->
+          <path d="M48 36 L182 36 C184 36 186 38 186 40 L186 220 C186 222 184 224 182 224 L48 224 Z" stroke="#4A4845" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <!-- Spine top/bottom details -->
+          <path d="M26 58 L48 58" stroke="#4A4845" stroke-width="1" stroke-linecap="round"/>
+          <path d="M26 202 L48 202" stroke="#4A4845" stroke-width="1" stroke-linecap="round"/>
+          <!-- Cover title area lines -->
+          <path d="M72 88 L162 88" stroke="#4A4845" stroke-width="1.3" stroke-linecap="round" opacity="0.5"/>
+          <path d="M72 102 L150 102" stroke="#4A4845" stroke-width="1.3" stroke-linecap="round" opacity="0.4"/>
+          <path d="M72 116 L138 116" stroke="#4A4845" stroke-width="1.3" stroke-linecap="round" opacity="0.3"/>
+          <!-- Small ornament on cover -->
+          <path d="M117 158 C117 158 105 150 105 142 C105 136 110 132 117 136 C124 132 129 136 129 142 C129 150 117 158 117 158Z" stroke="#4A4845" stroke-width="1.2" stroke-linecap="round"/>
+          <!-- Ribbon bookmark (gold) -->
+          <path d="M148 224 L148 254 L155 247 L162 254 L162 224" stroke="#C49A55" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+
+    </div><!-- / illustration-zone -->
+
+    <!-- Step navigation -->
+    <nav class="step-nav">
+      <ul>
+        <li class="step-item active" data-s="1">
+          <svg class="step-check" viewBox="0 0 14 14" fill="none"><path d="M2 7L6 11L12 3" stroke="#908C86" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Welcome
+        </li>
+        <li class="step-item" data-s="2">
+          <svg class="step-check" viewBox="0 0 14 14" fill="none"><path d="M2 7L6 11L12 3" stroke="#908C86" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          About you
+        </li>
+        <li class="step-item" data-s="3">
+          <svg class="step-check" viewBox="0 0 14 14" fill="none"><path d="M2 7L6 11L12 3" stroke="#908C86" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          About them
+        </li>
+        <li class="step-item" data-s="4">
+          <svg class="step-check" viewBox="0 0 14 14" fill="none"><path d="M2 7L6 11L12 3" stroke="#908C86" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          The session
+        </li>
+        <li class="step-item" data-s="5">
+          <svg class="step-check" viewBox="0 0 14 14" fill="none"><path d="M2 7L6 11L12 3" stroke="#908C86" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          Payment
+        </li>
+        <li class="step-item" data-s="6">
+          <svg class="step-check" viewBox="0 0 14 14" fill="none"><path d="M2 7L6 11L12 3" stroke="#908C86" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          You're all set
+        </li>
+      </ul>
+    </nav>
+
+  </aside><!-- / left-panel -->
+
+
+  <!-- ══════════════════════════════════════════
+       RIGHT PANEL
+  ══════════════════════════════════════════ -->
+  <main class="right-panel">
+
+    <!-- ── STEP 1: Arrival ── -->
+    <div class="step-pane active" id="pane-1">
+      <div class="arrival-center">
+        <h1 class="step-h">Let's get to know your family a little before we begin.</h1>
+        <p class="step-sub">This takes about three minutes. There are no wrong answers.</p>
+        <button class="btn-begin" onclick="goTo(2)">Begin</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 2: About You ── -->
+    <div class="step-pane" id="pane-2">
+      <button class="btn-back" onclick="goTo(1)">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+      <h1 class="step-h">First, a little about you.</h1>
+      <p class="step-sub">So we know who to keep in touch with.</p>
+
+      <div class="field">
+        <label class="field-label" for="f-name">Your name</label>
+        <input class="field-input" type="text" id="f-name" autocomplete="name" placeholder="Your full name">
+        <p class="field-error" id="e-name">We just need your name before we continue.</p>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="f-email">Where should we send updates?</label>
+        <input class="field-input" type="email" id="f-email" autocomplete="email" placeholder="your@email.com">
+        <p class="field-error" id="e-email">A valid email would be lovely — so we can stay in touch.</p>
+      </div>
+
+      <div class="controls">
+        <button class="btn-continue" onclick="validate(2)">Continue</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 3: About Them ── -->
+    <div class="step-pane" id="pane-3">
+      <button class="btn-back" onclick="goTo(2)">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+      <h1 class="step-h">Tell us about them.</h1>
+      <p class="step-sub">The person whose story we're here to capture.</p>
+
+      <div class="field">
+        <label class="field-label" for="f-subname">Their full name</label>
+        <input class="field-input" type="text" id="f-subname" placeholder="Full name">
+        <p class="field-error" id="e-subname">We'd love to know their name before we go further.</p>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="f-nickname">What do they like to be called?</label>
+        <input class="field-input" type="text" id="f-nickname" placeholder="e.g. Nana, Dad, Grandpa Joe">
+        <p class="field-helper">The name their family actually uses.</p>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="f-age">Their age</label>
+        <input class="field-input narrow" type="text" id="f-age" placeholder="e.g. 78" inputmode="numeric">
+        <p class="field-error" id="e-age">Roughly how old are they?</p>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Their relationship to you</label>
+        <div class="pill-row" id="pill-rel">
+          <button class="pill" data-v="Grandmother"    onclick="pickPill(this,'rel')">Grandmother</button>
+          <button class="pill" data-v="Grandfather"    onclick="pickPill(this,'rel')">Grandfather</button>
+          <button class="pill" data-v="Mother"         onclick="pickPill(this,'rel')">Mother</button>
+          <button class="pill" data-v="Father"         onclick="pickPill(this,'rel')">Father</button>
+          <button class="pill" data-v="Great-grandparent" onclick="pickPill(this,'rel')">Great-grandparent</button>
+          <button class="pill" data-v="Other"          onclick="pickPill(this,'rel')">Other</button>
+        </div>
+        <p class="field-error" id="e-rel">Please let us know how they're related to you.</p>
+      </div>
+
+      <div class="field breathing-room">
+        <label class="field-label" for="f-desc">How would you describe them in a few words?</label>
+        <textarea class="field-textarea" id="f-desc" rows="5" placeholder="Warm, stubborn, always had a story ready..."></textarea>
+        <p class="field-error" id="e-desc">A few words about who they are would help us immensely.</p>
+      </div>
+
+      <div class="controls">
+        <button class="btn-continue" onclick="validate(3)">Continue</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 4: The Session ── -->
+    <div class="step-pane" id="pane-4">
+      <button class="btn-back" onclick="goTo(3)">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+      <h1 class="step-h">Let's find a time.</h1>
+      <p class="step-sub">We'll take care of everything else.</p>
+
+      <div class="field">
+        <label class="field-label" style="margin-bottom:14px;">Choose a date and time</label>
+        <div class="cal-wrap">
+          <div class="cal-header">
+            <button class="cal-nav" id="cal-prev" onclick="shiftMonth(-1)">&#8249;</button>
+            <span class="cal-month" id="cal-month-label"></span>
+            <button class="cal-nav" id="cal-next" onclick="shiftMonth(1)">&#8250;</button>
+          </div>
+          <table class="cal-grid">
+            <thead>
+              <tr>
+                <th>Mo</th><th>Tu</th><th>We</th>
+                <th>Th</th><th>Fr</th><th>Sa</th><th>Su</th>
+              </tr>
+            </thead>
+            <tbody id="cal-body"></tbody>
+          </table>
+
+          <div class="time-slots" id="time-slots" style="display:none;">
+            <span class="time-label">What time works best?</span>
+            <div class="time-grid" id="time-grid"></div>
+          </div>
+        </div>
+        <p class="field-error" id="e-session">Please choose a date and time before continuing.</p>
+      </div>
+
+      <div class="field" style="margin-top:8px;">
+        <label class="field-label" for="f-notes">Anything else we should know?</label>
+        <textarea class="field-textarea" id="f-notes" rows="4"
+          placeholder="A hearing difficulty, a sensitive topic, or a story you hope we find our way to..."></textarea>
+        <p class="field-helper">Completely optional — but we'll read every word.</p>
+      </div>
+
+      <div class="controls">
+        <button class="btn-continue" id="btn-step4" onclick="validate(4)" disabled>Continue</button>
+      </div>
+    </div>
+
+    <!-- ── STEP 5: Payment ── -->
+    <div class="step-pane" id="pane-5">
+      <button class="btn-back" onclick="goTo(4)">
+        <svg viewBox="0 0 16 16" fill="none"><path d="M10 3L5 8L10 13" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Back
+      </button>
+      <h1 class="step-h">One last thing.</h1>
+      <p class="step-sub">Secure your session and we'll take it from here.</p>
+
+      <div class="order-summary">
+        <div class="order-summary-left">
+          <span class="order-title">The Remote</span>
+          <span class="order-desc">90-min interview · Digital heirloom · Editorial narrative</span>
+        </div>
+        <span class="order-price">€249</span>
+      </div>
+
+      <div class="field">
+        <label class="field-label" for="f-cardname">Name on card</label>
+        <input class="field-input" type="text" id="f-cardname" autocomplete="cc-name" placeholder="As it appears on the card">
+        <p class="field-error" id="e-cardname">We need the name on the card to process payment.</p>
+      </div>
+
+      <div class="field">
+        <label class="field-label">Card details</label>
+        <div class="stripe-wrap" id="stripe-wrap">
+          <div id="stripe-card-element"></div>
+        </div>
+        <p class="stripe-error" id="stripe-error"></p>
+      </div>
+
+      <button class="pay-btn" id="pay-btn" onclick="handlePayment()">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="1" y="4" width="14" height="10" rx="1.5"/>
+          <path d="M1 8h14"/>
+        </svg>
+        Pay €249
+      </button>
+
+      <p class="secure-note">
+        <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3" y="7" width="10" height="8" rx="1"/>
+          <path d="M5 7V5a3 3 0 016 0v2"/>
+        </svg>
+        Secured by Stripe · SSL encrypted
+      </p>
+    </div>
+
+    <!-- ── STEP 6: Confirmation ── -->
+    <div class="step-pane" id="pane-6">
+      <div class="confirm-inner">
+        <p class="confirm-wordmark">Told</p>
+        <p class="confirm-ornament">· · ·</p>
+        <h1 class="step-h" style="margin-bottom:20px;">You've done something really meaningful.</h1>
+        <p class="confirm-note">"Thank you for trusting us with this. I'll be in touch within 24 hours to confirm everything and answer any questions."</p>
+        <p class="confirm-sig">— Ciarán</p>
+
+        <div class="summary-card">
+          <div class="summary-row">
+            <span class="s-key">Their name</span>
+            <span class="s-val" id="s-name">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="s-key">Known as</span>
+            <span class="s-val" id="s-nick">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="s-key">Session date &amp; time</span>
+            <span class="s-val" id="s-format">—</span>
+          </div>
+          <div class="summary-row">
+            <span class="s-key">Tier</span>
+            <span class="s-val">The Remote</span>
+          </div>
+        </div>
+
+        <p class="confirm-email">A confirmation has been sent to <span id="s-email">your email address</span>.</p>
+      </div>
+    </div>
+
+  </main><!-- / right-panel -->
+</div><!-- / form-shell -->
+
+<script>
+  let step = 1;
+  const TOTAL = 6;
+  const fd = {
+    name:'', email:'', subName:'', nick:'', age:'',
+    rel:'', desc:'', notes:'',
+    selectedDate: null, selectedTime: ''
+  };
+
+  /* ── CALENDAR ── */
+  const TIMES = ['5:00 PM','6:00 PM','7:00 PM','8:00 PM','9:00 PM'];
+  const MONTHS = ['January','February','March','April','May','June',
+                  'July','August','September','October','November','December'];
+
+  let calDate = new Date();
+  calDate.setDate(1);
+
+  function renderCal() {
+    const today = new Date();
+    today.setHours(0,0,0,0);
+    const y = calDate.getFullYear(), m = calDate.getMonth();
+    document.getElementById('cal-month-label').textContent = MONTHS[m] + ' ' + y;
+
+    const firstDay = new Date(y, m, 1).getDay(); // 0=Sun
+    const daysInMonth = new Date(y, m + 1, 0).getDate();
+    // Convert Sun-start to Mon-start
+    const offset = (firstDay === 0 ? 6 : firstDay - 1);
+
+    let html = '';
+    let cell = 0;
+    let day = 1;
+    while (day <= daysInMonth) {
+      html += '<tr>';
+      for (let col = 0; col < 7; col++) {
+        if ((cell < offset && day === 1) || day > daysInMonth) {
+          html += '<td></td>';
+        } else {
+          const d = new Date(y, m, day);
+          d.setHours(0,0,0,0);
+          const cutoff = new Date(today); cutoff.setDate(today.getDate() + 7);
+          const isPast = d < cutoff;
+          const isToday = d.getTime() === today.getTime();
+          const isSel = fd.selectedDate && d.getTime() === fd.selectedDate.getTime();
+          let cls = 'cal-day';
+          if (isToday) cls += ' today';
+          if (isSel)   cls += ' selected';
+          const disabled = isPast ? 'disabled' : '';
+          html += `<td><button class="${cls}" ${disabled} onclick="pickDate(${y},${m},${day})">${day}</button></td>`;
+          day++;
+        }
+        cell++;
+      }
+      html += '</tr>';
+      if (day > daysInMonth) break;
+    }
+    document.getElementById('cal-body').innerHTML = html;
+    document.getElementById('cal-prev').disabled =
+      (calDate.getFullYear() === today.getFullYear() && calDate.getMonth() === today.getMonth());
+  }
+
+  function shiftMonth(dir) {
+    calDate.setMonth(calDate.getMonth() + dir);
+    renderCal();
+  }
+
+  function pickDate(y, m, d) {
+    fd.selectedDate = new Date(y, m, d);
+    fd.selectedTime = '';
+    renderCal();
+    renderTimes();
+    document.getElementById('time-slots').style.display = 'block';
+    err('e-session', false);
+    updateStep4Btn();
+  }
+
+  function renderTimes() {
+    const grid = document.getElementById('time-grid');
+    grid.innerHTML = TIMES.map(t =>
+      `<button class="time-pill${fd.selectedTime === t ? ' on' : ''}" onclick="pickTime('${t}')">${t}</button>`
+    ).join('');
+  }
+
+  function pickTime(t) {
+    fd.selectedTime = t;
+    renderTimes();
+    updateStep4Btn();
+  }
+
+  function updateStep4Btn() {
+    const btn = document.getElementById('btn-step4');
+    if (btn) btn.disabled = !(fd.selectedDate && fd.selectedTime);
+  }
+
+  function goTo(n) {
+    document.getElementById('pane-' + step).classList.remove('active');
+    document.getElementById('pane-' + n).classList.add('active');
+
+    // scroll the new pane to top (right-panel is the scroll container here)
+    const pane = document.getElementById('pane-' + n);
+    pane.scrollTop = 0;
+
+    step = n;
+    setProgress(n);
+    setNav(n);
+    setIllus(n);
+  }
+
+  function setProgress(n) {
+    document.getElementById('progressBar').style.width = ((n / TOTAL) * 100) + '%';
+  }
+
+  function setNav(n) {
+    document.querySelectorAll('.step-item').forEach((el, i) => {
+      el.classList.remove('active','done');
+      if (i + 1 === n) el.classList.add('active');
+      else if (i + 1 < n) el.classList.add('done');
+    });
+  }
+
+  function setIllus(n) {
+    document.querySelectorAll('.illus').forEach(el => el.classList.remove('active'));
+    const t = document.getElementById('illus-' + n);
+    if (t) t.classList.add('active');
+  }
+
+  function err(id, show) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.classList.toggle('show', show);
+  }
+
+  function pickPill(el, key) {
+    el.closest('.pill-row').querySelectorAll('.pill').forEach(p => p.classList.remove('on'));
+    el.classList.add('on');
+    fd[key] = el.dataset.v;
+    err('e-rel', false);
+  }
+
+
+  function validate(n) {
+    let ok = true;
+
+    if (n === 2) {
+      const name  = document.getElementById('f-name').value.trim();
+      const email = document.getElementById('f-email').value.trim();
+      const validEmail = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+      err('e-name',  !name);
+      err('e-email', !validEmail);
+      if (!name || !validEmail) { ok = false; }
+      else { fd.name = name; fd.email = email; }
+    }
+
+    if (n === 3) {
+      const subName = document.getElementById('f-subname').value.trim();
+      const age     = document.getElementById('f-age').value.trim();
+      const desc    = document.getElementById('f-desc').value.trim();
+      err('e-subname', !subName);
+      err('e-age',     !age);
+      err('e-rel',     !fd.rel);
+      err('e-desc',    !desc);
+      if (!subName || !age || !fd.rel || !desc) { ok = false; }
+      else {
+        fd.subName = subName;
+        fd.nick    = document.getElementById('f-nickname').value.trim();
+        fd.age     = age;
+        fd.desc    = desc;
+      }
+    }
+
+    if (n === 4) {
+      const hasDateTime = fd.selectedDate && fd.selectedTime;
+      err('e-session', !hasDateTime);
+      if (!hasDateTime) { ok = false; }
+      else { fd.notes = document.getElementById('f-notes').value.trim(); }
+    }
+
+    if (ok) {
+      if (n === 4) { /* payment handled separately by handlePayment() */ }
+      goTo(n + 1);
+    }
+  }
+
+  function fillConfirmation() {
+    document.getElementById('s-name').textContent   = fd.subName || '—';
+    document.getElementById('s-nick').textContent   = fd.nick || fd.subName || '—';
+    const dateStr = fd.selectedDate
+      ? fd.selectedDate.toLocaleDateString('en-IE', { weekday:'long', day:'numeric', month:'long' })
+      : '—';
+    document.getElementById('s-format').textContent = fd.selectedTime ? dateStr + ' · ' + fd.selectedTime : '—';
+    document.getElementById('s-email').textContent  = fd.email || 'your email address';
+  }
+
+
+  /* ── STRIPE ── */
+  const stripe = Stripe('pk_test_51IQKJSAJDsB0VZLGB1AaRPwimej7AM0LIMyRzFGn1cgOIw33lCyAxi1xNEbhVrZ7pX5wjE63UQJBs0wsEZJ1feLc00bhjKbdbr');
+
+  const elements = stripe.elements({
+    fonts: [{ cssSrc: 'https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400&display=swap' }]
+  });
+
+  const cardElement = elements.create('card', {
+    style: {
+      base: {
+        fontFamily: '"DM Sans", sans-serif',
+        fontSize: '16px',
+        color: '#1A1A18',
+        '::placeholder': { color: '#9A9690' },
+        iconColor: '#9A9690',
+      },
+      invalid: {
+        color: '#8B5E3C',
+        iconColor: '#8B5E3C',
+      },
+    },
+    hidePostalCode: true,
+  });
+
+  cardElement.mount('#stripe-card-element');
+
+  const stripeWrap = document.getElementById('stripe-wrap');
+  cardElement.on('focus', () => stripeWrap.classList.add('focused'));
+  cardElement.on('blur',  () => stripeWrap.classList.remove('focused'));
+  cardElement.on('change', (e) => {
+    document.getElementById('stripe-error').textContent = e.error ? e.error.message : '';
+  });
+
+  async function handlePayment() {
+    const cardName = document.getElementById('f-cardname').value.trim();
+    if (!cardName) { err('e-cardname', true); return; }
+    err('e-cardname', false);
+
+    const btn = document.getElementById('pay-btn');
+    btn.disabled = true;
+    btn.innerHTML = '<span>Processing…</span>';
+
+    try {
+      // 1. Create PaymentIntent server-side
+      const res = await fetch('/.netlify/functions/create-payment-intent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          buyerName:   fd.name,
+          buyerEmail:  fd.email,
+          subjectName: fd.subName,
+        }),
+      });
+      const { clientSecret, error: serverError } = await res.json();
+      if (serverError) throw new Error(serverError);
+
+      // 2. Confirm the card payment
+      const { error, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: cardElement,
+          billing_details: { name: cardName },
+        },
+      });
+
+      if (error) {
+        document.getElementById('stripe-error').textContent = error.message;
+        btn.disabled = false;
+        btn.innerHTML = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="14" height="10" rx="1.5"/><path d="M1 8h14"/></svg> Pay €249`;
+      } else if (paymentIntent.status === 'succeeded') {
+        fillConfirmation();
+        goTo(6);
+      }
+    } catch (e) {
+      document.getElementById('stripe-error').textContent = 'Something went wrong. Please try again.';
+      btn.disabled = false;
+      btn.innerHTML = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="14" height="10" rx="1.5"/><path d="M1 8h14"/></svg> Pay €249`;
+    }
+  }
+
+  // Boot
+  setProgress(1);
+  setNav(1);
+  setIllus(1);
+  renderCal();
+</script>
+
+</body>
+</html>
