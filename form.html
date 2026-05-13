@@ -1125,7 +1125,14 @@
             buyerName:   fd.name,
             buyerEmail:  fd.email,
             subjectName: fd.subName,
-            sessionDate: fd.selectedDate,
+            subjectNick: fd.nick,
+            subjectAge:  fd.age,
+            relationship: fd.rel,
+            description: fd.desc,
+            notes:       fd.notes,
+            sessionDate: fd.selectedDate
+              ? fd.selectedDate.toLocaleDateString('en-IE', { weekday:'long', day:'numeric', month:'long', year:'numeric' })
+              : '',
             sessionTime: fd.selectedTime,
             format:      'Remote',
             pkg:         'Digital',

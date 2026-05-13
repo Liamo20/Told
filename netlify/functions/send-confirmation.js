@@ -8,7 +8,8 @@ exports.handler = async (event) => {
   }
 
   try {
-    const { buyerName, buyerEmail, subjectName, sessionDate, sessionTime, format, pkg } =
+    const { buyerName, buyerEmail, subjectName, subjectNick, subjectAge, relationship,
+            description, notes, sessionDate, sessionTime, format, pkg } =
       JSON.parse(event.body || '{}');
 
     if (!buyerEmail) {
@@ -19,7 +20,7 @@ exports.handler = async (event) => {
     }
 
     const html = buildEmail({ buyerName, subjectName, sessionDate, sessionTime, format, pkg });
-    const notifyHtml = buildNotification({ buyerName, buyerEmail, subjectName, sessionDate, sessionTime, format, pkg });
+    const notifyHtml = buildNotification({ buyerName, buyerEmail, subjectName, subjectNick, subjectAge, relationship, description, notes, sessionDate, sessionTime, format, pkg });
 
     // Send both emails in parallel
     const [customerResult, notifyResult] = await Promise.all([
@@ -59,7 +60,7 @@ exports.handler = async (event) => {
   }
 };
 
-function buildNotification({ buyerName, buyerEmail, subjectName, sessionDate, sessionTime, format, pkg }) {
+function buildNotification({ buyerName, buyerEmail, subjectName, subjectNick, subjectAge, relationship, description, notes, sessionDate, sessionTime, format, pkg }) {
   const green  = '#1C2B1C';
   const dark   = '#1A1A18';
   const mid    = '#4A4845';
@@ -70,60 +71,94 @@ function buildNotification({ buyerName, buyerEmail, subjectName, sessionDate, se
   const serif  = "Georgia, 'Times New Roman', serif";
   const sans   = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
 
-  const rows = [
-    ['Buyer',    buyerName   || '—'],
-    ['Email',    buyerEmail  || '—'],
-    ['For',      subjectName || '—'],
-    ['Session',  sessionDate && sessionTime ? `${sessionDate} at ${sessionTime}` : (sessionDate || '—')],
-    ['Format',   format || '—'],
-    ['Package',  pkg    || '—'],
-  ];
-
-  const tableRows = rows.map(([key, val]) => `
+  const row = (key, val) => val ? `
     <tr>
       <td style="font-family:${sans};font-size:13px;font-weight:500;color:${lite};
-                 padding-right:16px;padding-bottom:10px;vertical-align:top;width:120px;">${key}</td>
+                 padding-right:20px;padding-bottom:12px;vertical-align:top;width:140px;white-space:nowrap;">${key}</td>
       <td style="font-family:${sans};font-size:13px;color:${dark};
-                 padding-bottom:10px;vertical-align:top;">${val}</td>
-    </tr>`).join('');
+                 padding-bottom:12px;vertical-align:top;line-height:1.6;">${val}</td>
+    </tr>` : '';
+
+  const section = (title, content) => `
+    <table width="100%" cellpadding="0" cellspacing="0"
+           style="background-color:${cream};border-radius:4px;margin-bottom:16px;">
+      <tr><td style="padding:6px 28px 4px;">
+        <p style="font-family:${sans};font-size:10px;font-weight:500;letter-spacing:0.1em;
+                  text-transform:uppercase;color:${lite};margin:0;">${title}</p>
+      </td></tr>
+      <tr><td style="padding:4px 28px 20px;">
+        <table width="100%" cellpadding="0" cellspacing="0">${content}</table>
+      </td></tr>
+    </table>`;
+
+  const buyerSection = section('Buyer', [
+    row('Name',  buyerName),
+    row('Email', `<a href="mailto:${buyerEmail}" style="color:${green};">${buyerEmail}</a>`),
+  ].join(''));
+
+  const subjectSection = section('About them', [
+    row('Name',         subjectName),
+    row('Known as',     subjectNick),
+    row('Age',          subjectAge),
+    row('Relationship', relationship),
+    row('Description',  description),
+  ].join(''));
+
+  const sessionSection = section('Session', [
+    row('Date &amp; time', sessionDate && sessionTime ? `${sessionDate} at ${sessionTime}` : (sessionDate || '—')),
+    row('Format',   format || 'Remote'),
+    row('Package',  pkg    || 'Digital'),
+    row('Notes',    notes),
+  ].join(''));
 
   return `<!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8" /><title>New Booking</title></head>
+<head><meta charset="UTF-8" /><title>New Booking — Told</title></head>
 <body style="margin:0;padding:0;background-color:${bg};font-family:${sans};">
   <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
     <tr><td align="center">
       <table width="600" cellpadding="0" cellspacing="0"
              style="background-color:#fff;border-radius:4px;overflow:hidden;max-width:600px;width:100%;">
+
+        <!-- Header -->
         <tr>
           <td style="padding:36px 48px 28px;border-bottom:1px solid ${border};">
             <span style="font-family:${serif};font-size:26px;font-weight:600;color:${green};">Told</span>
           </td>
         </tr>
+
+        <!-- Body -->
         <tr>
           <td style="padding:40px 48px;">
-            <h1 style="font-family:${serif};font-size:24px;font-weight:500;color:${dark};margin:0 0 20px;">
+            <h1 style="font-family:${serif};font-size:24px;font-weight:500;
+                       color:${dark};margin:0 0 8px;line-height:1.3;">
               New booking received
             </h1>
-            <table width="100%" cellpadding="0" cellspacing="0"
-                   style="background-color:${cream};border-radius:4px;">
-              <tr><td style="padding:24px 28px;">
-                <table width="100%" cellpadding="0" cellspacing="0">${tableRows}</table>
-              </td></tr>
-            </table>
-            <p style="font-family:${sans};font-size:14px;color:${mid};margin:24px 0 0;line-height:1.6;">
-              Log in to <a href="https://dashboard.stripe.com" style="color:${green};">Stripe</a>
-              to view the payment.
+            <p style="font-family:${sans};font-size:14px;color:${lite};margin:0 0 28px;">
+              ${sessionDate ? `Session on ${sessionDate}${sessionTime ? ' at ' + sessionTime : ''}` : 'Session date TBC'}
+            </p>
+
+            ${buyerSection}
+            ${subjectSection}
+            ${sessionSection}
+
+            <p style="font-family:${sans};font-size:13px;color:${mid};margin:24px 0 0;line-height:1.6;">
+              <a href="https://dashboard.stripe.com/test/payments" style="color:${green};font-weight:500;">
+                View payment in Stripe →
+              </a>
             </p>
           </td>
         </tr>
+
+        <!-- Footer -->
         <tr>
           <td style="border-top:1px solid ${border};padding:20px 48px;">
             <p style="font-family:${sans};font-size:12px;color:${lite};margin:0;">
-              told-memoirs.netlify.app
+              told.ie
             </p>
           </td>
         </tr>
+
       </table>
     </td></tr>
   </table>
