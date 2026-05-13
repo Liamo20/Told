@@ -2,6 +2,8 @@
   "name": "told",
   "version": "1.0.0",
   "dependencies": {
+    "@react-email/render": "^2.0.8",
+    "resend": "^6.12.3",
     "stripe": "^14.0.0"
   }
 }
