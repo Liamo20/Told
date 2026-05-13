@@ -19,26 +19,36 @@ exports.handler = async (event) => {
     }
 
     const html = buildEmail({ buyerName, subjectName, sessionDate, sessionTime, format, pkg });
+    const notifyHtml = buildNotification({ buyerName, buyerEmail, subjectName, sessionDate, sessionTime, format, pkg });
 
-    const { data, error } = await resend.emails.send({
-      from: 'Told <hello@told.ie>',
-      to: buyerEmail,
-      subject: "You've just done something really meaningful",
-      html,
-    });
+    // Send both emails in parallel
+    const [customerResult, notifyResult] = await Promise.all([
+      resend.emails.send({
+        from: 'Told <hello@told.ie>',
+        to: buyerEmail,
+        subject: "You've just done something really meaningful",
+        html,
+      }),
+      resend.emails.send({
+        from: 'Told <hello@told.ie>',
+        to: 'liamlennon1410@gmail.com',
+        subject: `New booking — ${subjectName || 'Unknown'} (${buyerName || 'Unknown'})`,
+        html: notifyHtml,
+      }),
+    ]);
 
-    if (error) {
+    if (customerResult.error) {
       return {
         statusCode: 500,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ error: error.message }),
+        body: JSON.stringify({ error: customerResult.error.message }),
       };
     }
 
     return {
       statusCode: 200,
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ id: data.id }),
+      body: JSON.stringify({ id: customerResult.data.id }),
     };
   } catch (err) {
     return {
@@ -48,6 +58,78 @@ exports.handler = async (event) => {
     };
   }
 };
+
+function buildNotification({ buyerName, buyerEmail, subjectName, sessionDate, sessionTime, format, pkg }) {
+  const green  = '#1C2B1C';
+  const dark   = '#1A1A18';
+  const mid    = '#4A4845';
+  const lite   = '#7A776F';
+  const border = '#E2DDD6';
+  const cream  = '#F6F3EE';
+  const bg     = '#F4F1EC';
+  const serif  = "Georgia, 'Times New Roman', serif";
+  const sans   = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+
+  const rows = [
+    ['Buyer',    buyerName   || '—'],
+    ['Email',    buyerEmail  || '—'],
+    ['For',      subjectName || '—'],
+    ['Session',  sessionDate && sessionTime ? `${sessionDate} at ${sessionTime}` : (sessionDate || '—')],
+    ['Format',   format || '—'],
+    ['Package',  pkg    || '—'],
+  ];
+
+  const tableRows = rows.map(([key, val]) => `
+    <tr>
+      <td style="font-family:${sans};font-size:13px;font-weight:500;color:${lite};
+                 padding-right:16px;padding-bottom:10px;vertical-align:top;width:120px;">${key}</td>
+      <td style="font-family:${sans};font-size:13px;color:${dark};
+                 padding-bottom:10px;vertical-align:top;">${val}</td>
+    </tr>`).join('');
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8" /><title>New Booking</title></head>
+<body style="margin:0;padding:0;background-color:${bg};font-family:${sans};">
+  <table width="100%" cellpadding="0" cellspacing="0" style="padding:40px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0"
+             style="background-color:#fff;border-radius:4px;overflow:hidden;max-width:600px;width:100%;">
+        <tr>
+          <td style="padding:36px 48px 28px;border-bottom:1px solid ${border};">
+            <span style="font-family:${serif};font-size:26px;font-weight:600;color:${green};">Told</span>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:40px 48px;">
+            <h1 style="font-family:${serif};font-size:24px;font-weight:500;color:${dark};margin:0 0 20px;">
+              New booking received
+            </h1>
+            <table width="100%" cellpadding="0" cellspacing="0"
+                   style="background-color:${cream};border-radius:4px;">
+              <tr><td style="padding:24px 28px;">
+                <table width="100%" cellpadding="0" cellspacing="0">${tableRows}</table>
+              </td></tr>
+            </table>
+            <p style="font-family:${sans};font-size:14px;color:${mid};margin:24px 0 0;line-height:1.6;">
+              Log in to <a href="https://dashboard.stripe.com" style="color:${green};">Stripe</a>
+              to view the payment.
+            </p>
+          </td>
+        </tr>
+        <tr>
+          <td style="border-top:1px solid ${border};padding:20px 48px;">
+            <p style="font-family:${sans};font-size:12px;color:${lite};margin:0;">
+              told-memoirs.netlify.app
+            </p>
+          </td>
+        </tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+}
 
 function buildEmail({ buyerName, subjectName, sessionDate, sessionTime, format, pkg }) {
   const green  = '#1C2B1C';
