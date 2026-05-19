@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Told — A Lifetime Legacy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -370,7 +371,7 @@
 
     .pricing-cards {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr;
       gap: 0;
       border: 1px solid var(--card-bdr);
     }
@@ -380,7 +381,7 @@
       position: relative;
     }
 
-    .pricing-card:first-child {
+    .pricing-card:not(:last-child) {
       border-right: 1px solid var(--card-bdr);
     }
 
@@ -812,7 +813,7 @@
       /* Pricing */
       .pricing-section { padding: 72px 24px; }
       .pricing-cards { grid-template-columns: 1fr; }
-      .pricing-card:first-child { border-right: none; border-bottom: 1px solid var(--card-bdr); }
+      .pricing-card:not(:last-child) { border-right: none; border-bottom: 1px solid var(--card-bdr); }
       .ribbon-wrap { display: none; }
 
       /* Discovery */
@@ -865,7 +866,7 @@
         <h1>The stories you almost never heard</h1>
         <p class="hero-body">We sit with your elders, capture their journey through professional interviews, and bind their life into a museum-quality volume.</p>
         <div class="hero-actions">
-          <button class="btn-primary" onclick="window.location.href='form.html'">Start the Journey</button>
+          <button class="btn-primary" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Start the Journey</button>
           <button class="btn-outline" onclick="document.getElementById('process').scrollIntoView({behavior:'smooth'})">The Process</button>
         </div>
       </div>
@@ -883,7 +884,7 @@
       "Most families mean to do this. The book sits on the shelf.<br>
       Life gets in the way. And then the window closes."
     </blockquote>
-    <p class="quote-attr">— The Founder's Note</p>
+    <p class="quote-attr">The Founder's Note</p>
   </section>
 
   <!-- PROCESS -->
@@ -904,7 +905,6 @@
           <line x1="3" y1="10" x2="21" y2="10"/>
         </svg>
         <p class="step-num">01. Scheduling</p>
-        <h3>Scheduling</h3>
         <p>We coordinate with the storyteller to find a comfortable window for deep reflection.</p>
       </div>
       <div class="step">
@@ -915,7 +915,6 @@
           <path d="M17 11a4 4 0 0 1 4 4"/>
         </svg>
         <p class="step-num">02. The Interview</p>
-        <h3>The Interview</h3>
         <p>A professional writer guides them through a two-hour session designed to surface the core of their experience.</p>
       </div>
       <div class="step">
@@ -924,7 +923,6 @@
           <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>
         </svg>
         <p class="step-num">03. The Heirloom</p>
-        <h3>The Heirloom</h3>
         <p>We edit, typeset, and craft a physical volume that holds their voice for the next hundred years.</p>
       </div>
     </div>
@@ -937,8 +935,8 @@
         <blockquote>
           "Her words didn't just tell her history; they anchored our entire family."
         </blockquote>
-        <p>This started when our interviewer sat down with his grandmother, notebook in hand, finally asking the questions he'd meant to for a decade.</p>
-        <p>When she passed, he used her words to write her eulogy. It wasn't a list of dates—it was the soul of who she was.</p>
+        <p>This started when our interviewer sat down with his grandmother, recorder running, finally asking the questions he'd meant to for a decade.</p>
+        <p>When she passed, he used her words to write her eulogy. It wasn't a list of dates. It was the soul of who she was.</p>
         <p class="story-closer">Told was born from the realization that every family deserves that anchor.</p>
       </div>
       <div class="story-image"><img src="hand-holding-book.jpg" alt="Hands holding an open book"></div>
@@ -965,18 +963,34 @@
           <li><span class="check">✓</span> Curated digital heirloom (PDF)</li>
           <li><span class="check">✓</span> Editorial transcription &amp; narrative</li>
         </ul>
-        <button class="btn-dark" onclick="window.location.href='form.html'">Start the Journey</button>
+        <button class="btn-dark" onclick="window.location.href='form.html'">Select</button>
       </div>
 
-      <!-- Card 2: The Bespoke -->
+      <!-- Card 2: The Visit -->
       <div class="pricing-card">
         <div class="ribbon-wrap">
-          <span>Premium</span>
+          <span>Popular</span>
         </div>
-        <p class="card-label">The In-Home Experience</p>
+        <p class="card-label">In-Home Session</p>
+        <div class="card-title-row">
+          <span class="card-name">The Visit</span>
+          <span class="card-price">€499</span>
+        </div>
+        <ul class="card-features">
+          <li><span class="check">✓</span> In-person session at their home</li>
+          <li><span class="check">✓</span> 90-minute professional interview</li>
+          <li><span class="check">✓</span> Printed physical copy</li>
+          <li><span class="check">✓</span> Editorial transcription &amp; narrative</li>
+        </ul>
+        <button class="btn-dark" onclick="window.location.href='form.html?package=visit'">Select</button>
+      </div>
+
+      <!-- Card 3: The Bespoke -->
+      <div class="pricing-card">
+        <p class="card-label">The Full Experience</p>
         <div class="card-title-row">
           <span class="card-name">The Bespoke</span>
-          <span style="color:var(--lite); font-size:22px;">—</span>
+          <span class="card-price">€699</span>
         </div>
         <p class="bespoke-desc">A writer visits your home for an afternoon of storytelling. Includes professional portraiture, audio archive, and a hand-bound linen hardcover volume.</p>
         <button class="btn-ghost" onclick="openWaitlist()">Join the Waitlist</button>
@@ -990,7 +1004,7 @@
     <div class="discovery-inner">
       <div class="discovery-content">
         <h2 class="discovery-heading">Not ready yet?<br>That's okay.</h2>
-        <p class="discovery-body">Book a free 15-minute call. No obligation — just honest answers about whether this is right for your family.</p>
+        <p class="discovery-body">Book a free 30-minute call. No obligation, just honest answers about whether this is right for your family.</p>
 
         <div class="discovery-persona">
           <img src="Sean.jpg" alt="Seán" class="persona-img">
@@ -1010,7 +1024,7 @@
       </div>
 
       <div class="discovery-widget">
-        <div class="calendly-inline-widget" data-url="https://calendly.com/liamlennon1410/yc-intro" style="min-width:280px;height:660px;"></div>
+        <div class="calendly-inline-widget" data-url="https://calendly.com/seankmcguinness/30min" style="min-width:280px;height:660px;"></div>
       </div>
     </div>
   </section>

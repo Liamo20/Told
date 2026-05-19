@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <script src="https://mcp.figma.com/mcp/html-to-design/capture.js" async></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Told — Your Family's Story Begins</title>
   <script src="https://js.stripe.com/v3/"></script>
@@ -777,10 +778,10 @@
 
       <div class="order-summary">
         <div class="order-summary-left">
-          <span class="order-title">The Remote</span>
-          <span class="order-desc">90-min interview · Digital heirloom · Editorial narrative</span>
+          <span class="order-title" id="order-title">The Remote</span>
+          <span class="order-desc" id="order-desc">90-min interview · Digital heirloom · Editorial narrative</span>
         </div>
-        <span class="order-price">€249</span>
+        <span class="order-price" id="order-price">€249</span>
       </div>
 
       <div class="field">
@@ -802,7 +803,7 @@
           <rect x="1" y="4" width="14" height="10" rx="1.5"/>
           <path d="M1 8h14"/>
         </svg>
-        Pay €249
+        <span id="pay-btn-label">Pay €249</span>
       </button>
 
       <p class="secure-note">
@@ -838,7 +839,7 @@
           </div>
           <div class="summary-row">
             <span class="s-key">Tier</span>
-            <span class="s-val">The Remote</span>
+            <span class="s-val" id="s-tier">The Remote</span>
           </div>
         </div>
 
@@ -850,6 +851,22 @@
 </div><!-- / form-shell -->
 
 <script>
+  const PACKAGES = {
+    remote: { key: 'remote', name: 'The Remote', price: 249, label: 'Pay €249', desc: '90-min interview · Digital heirloom · Editorial narrative' },
+    visit:  { key: 'visit',  name: 'The Visit',  price: 499, label: 'Pay €499', desc: 'In-person session · Printed physical copy · Editorial narrative' },
+  };
+
+  const urlPkg = new URLSearchParams(location.search).get('package');
+  const activePkg = PACKAGES[urlPkg] || PACKAGES.remote;
+
+  function applyPackageUI() {
+    document.getElementById('order-title').textContent = activePkg.name;
+    document.getElementById('order-desc').textContent  = activePkg.desc;
+    document.getElementById('order-price').textContent = '€' + activePkg.price;
+    document.getElementById('pay-btn-label').textContent = activePkg.label;
+    document.getElementById('s-tier').textContent = activePkg.name;
+  }
+
   let step = 1;
   const TOTAL = 6;
   const fd = {
@@ -1093,13 +1110,14 @@
           buyerName:   fd.name,
           buyerEmail:  fd.email,
           subjectName: fd.subName,
+          package:     activePkg.key,
         }),
       });
       const data = await res.json();
       if (!res.ok || data.error) {
         document.getElementById('stripe-error').textContent = data.error || `Server error (${res.status})`;
         btn.disabled = false;
-        btn.innerHTML = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="14" height="10" rx="1.5"/><path d="M1 8h14"/></svg> Pay €249`;
+        btn.innerHTML = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="14" height="10" rx="1.5"/><path d="M1 8h14"/></svg> ${activePkg.label}\`;
         return;
       }
       const clientSecret = data.clientSecret;
@@ -1115,7 +1133,7 @@
       if (error) {
         document.getElementById('stripe-error').textContent = error.message;
         btn.disabled = false;
-        btn.innerHTML = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="14" height="10" rx="1.5"/><path d="M1 8h14"/></svg> Pay €249`;
+        btn.innerHTML = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="14" height="10" rx="1.5"/><path d="M1 8h14"/></svg> ${activePkg.label}\`;
       } else if (paymentIntent.status === 'succeeded') {
         // Send booking confirmation email (fire and forget — don't block UI)
         fetch('/.netlify/functions/send-confirmation', {
@@ -1145,15 +1163,74 @@
     } catch (e) {
       document.getElementById('stripe-error').textContent = e.message || 'Something went wrong. Please try again.';
       btn.disabled = false;
-      btn.innerHTML = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="14" height="10" rx="1.5"/><path d="M1 8h14"/></svg> Pay €249`;
+      btn.innerHTML = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="14" height="10" rx="1.5"/><path d="M1 8h14"/></svg> ${activePkg.label}\`;
     }
   }
 
   // Boot
+  applyPackageUI();
   setProgress(1);
   setNav(1);
   setIllus(1);
   renderCal();
+
+  // Auto-navigate to a specific step via URL hash (e.g. #step=3) for design captures
+  (function initCapture() {
+    const params = new URLSearchParams(location.hash.slice(1));
+    const s = parseInt(params.get('step') || '1', 10);
+    if (s < 2 || s > 6) return;
+
+    fd.name    = "Sarah O'Brien";
+    fd.email   = 'sarah@example.com';
+    fd.subName = "Margaret O'Brien";
+    fd.nick    = 'Nana';
+    fd.age     = '82';
+    fd.rel     = 'Grandmother';
+    fd.desc    = 'Warm, stubborn, always had a story ready.';
+
+    const sessionDate = new Date();
+    sessionDate.setDate(sessionDate.getDate() + 14);
+    fd.selectedDate = sessionDate;
+    fd.selectedTime = '6:00 PM';
+
+    if (s === 6) fillConfirmation();
+
+    goTo(s);
+
+    if (s === 4) {
+      renderCal();
+      renderTimes();
+      document.getElementById('time-slots').style.display = 'block';
+      const btn4 = document.getElementById('btn-step4');
+      if (btn4) btn4.disabled = false;
+    }
+
+    setTimeout(() => {
+      if (s === 2) {
+        const nf = document.getElementById('f-name');
+        const ef = document.getElementById('f-email');
+        if (nf) nf.value = fd.name;
+        if (ef) ef.value = fd.email;
+      }
+      if (s === 3) {
+        const f = document.getElementById('f-subname');
+        const n = document.getElementById('f-nickname');
+        const a = document.getElementById('f-age');
+        const d = document.getElementById('f-desc');
+        if (f) f.value = fd.subName;
+        if (n) n.value = fd.nick;
+        if (a) a.value = fd.age;
+        if (d) d.value = fd.desc;
+        document.querySelectorAll('#pill-rel .pill').forEach(p => {
+          if (p.dataset.v === 'Grandmother') p.classList.add('on');
+        });
+      }
+      if (s === 5) {
+        const cn = document.getElementById('f-cardname');
+        if (cn) cn.value = fd.name;
+      }
+    }, 100);
+  })();
 </script>
 
 </body>
